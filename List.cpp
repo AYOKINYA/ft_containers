@@ -1,4 +1,5 @@
 #include "List.hpp"
+#include <limits>
 
 typedef <typename T>
 List<T>::List() : lst(nullptr)
@@ -35,27 +36,132 @@ List<T>& operator=(const List &list)
 }
 
 typedef <typename T>
-T	List<T>::front(void) const
+iterator List<T>::begin(void)
+{
+	return (iterator(this->head));
+}
+
+typedef <typename T>
+const_iterator List<T>::begin(void)
+{
+	return (const_iterator(this->head));
+}
+
+typedef <typename T>
+iterator List<T>::end(void)
+{
+	return (iterator(this->tail));
+}
+
+typedef <typename T>
+const_iterator List<T>::end(void)
+{
+	return (const_iterator(this->tail));
+}
+
+typedef <typename T>
+reverse_iterator List<T>::rbegin(void)
+{
+	return (reverse_iterator(end()));
+}
+
+typedef <typename T>
+const_reverse_iterator List<T>::rbegin(void)
+{
+	return (const_reverse_iterator(end()));
+}
+
+typedef <typename T>
+reverse_iterator List<T>::rend(void)
+{
+	return (reverse_iterator(begin()));
+}
+
+typedef <typename T>
+const_reverse_iterator List<T>::rend(void)
+{
+	return (const_reverse_iterator(begin()));
+}
+
+typedef <typename T>
+bool List<T>::empty(void)
+{
+	return (this->size == 0)
+}
+
+typedef <typename T>
+size_type List<T>::size(void)
+{
+	return (this->size);
+}
+
+
+typedef <typename T>
+size_type List<T>::size(void)
+{
+	return (std::numeric_limits<size_type>::max() / sizeof(this->head));
+}
+
+typedef <typename T>
+reference	List<T>::front(void)
 {
 	if (this->lst == nullptr)
 		return (0);
 	if (this->lst->head == nullptr)
 		return (0);
-	return (this->lst->head->data);
+	return (*this->lst->head->data);
 }
 
 typedef <typename T>
-T	List<T>::back(void) const
+const_reference	List<T>::front(void) const
+{
+	if (this->lst == nullptr)
+		return (0);
+	if (this->lst->head == nullptr)
+		return (0);
+	return (*this->lst->head->data);
+}
+
+typedef <typename T>
+reference	List<T>::back(void)
 {
 	if (this->lst == nullptr)
 		return (0);
 	if (this->lst->tail == nullptr)
 		return (0);
-	return (this->lst->tail->data);
+	return (*this->lst->tail->data);
 }
 
 typedef <typename T>
-void	List<T>::push_back(const T & elem)
+const_reference	List<T>::back(void) const
+{
+	if (this->lst == nullptr)
+		return (0);
+	if (this->lst->tail == nullptr)
+		return (0);
+	return (*this->lst->tail->data);
+}
+
+// template <typename T, typename InputIt>
+// void List<T>::assign(InputIt first, InputIt last)
+// {
+
+// }
+
+// typedef <typename T>
+// void List<T>::assign(size_type n, const value_type& val)
+// {
+
+// }
+
+iterator List<T>::insert (iterator position, const value_type& val)
+{
+	
+}
+
+
+typedef <typename T>
+void	List<T>::push_back(const value_type& elem)
 {
 	if (this->lst == 0)
 		return ;
@@ -101,7 +207,7 @@ void	List<T>::pop_back(void)
 }
 
 typedef <typename T>
-void	List<T>::push_front(const T & elem)
+void	List<T>::push_front(const value_type & elem)
 {
 	if (this->lst == 0)
 		return ;

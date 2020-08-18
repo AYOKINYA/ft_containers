@@ -1,6 +1,6 @@
 #ifndef ITERATORLIST_HPP
 # define ITERATORLIST_HPP
-# include <cstddef>
+
 # include "Iterator.hpp"
 namespace ft
 {
@@ -29,6 +29,11 @@ namespace ft
 
 				IteratorList() {};
 				~IteratorList() {};
+				IteratorList(t_list<T> *list)
+				{
+					this->ptr = list;
+				};
+
 				IteratorList(const IteratorList &copy)
 				{
 					*this = copy;
@@ -43,11 +48,6 @@ namespace ft
 
 					return (*this);
 				}
-
-				IteratorList(t_list<T> *list)
-				{
-					this->ptr = list;
-				};
 
 				IteratorList &operator++(void)
 				{
@@ -102,40 +102,6 @@ namespace ft
 					return (this->ptr);
 				}
 	};
-
-	template <typename T>
-	class ReverseIteratorList : public IteratorList<T>
-	{
-		private:
-		public:
-				ReverseIteratorList() {};
-				~ReverseIteratorList() {};
-				ReverseIteratorList(const ReverseIteratorList &copy)
-				{
-					*this = copy;
-				};
-
-				ReverseIteratorList(t_list<T> * list)
-				{
-					this->ptr = list;
-				};
-				
-				ReverseIteratorList& operator=(const ReverseIteratorList &rhs)
-				{
-					if (this == &rhs)
-						return (*this);
-					this->ptr = rhs.ptr;
-					return (*this);
-				}
-
-	}
-
-
-
-
-
-
-
 
 
 

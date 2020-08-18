@@ -36,14 +36,36 @@ class List
 			typedef typename Allocator::const_reference const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
+			typedef typename IteratorList<T> iterator;
+			typedef typename IteratorList<const T> const_iterator;
+			typedef typename ReverseIterator<Iterator> reverse_iterator;
+			typedef typename ReverseIterator<const Iterator> const_reverse_iterator;
 
-			void	assign(void);
-			T		front(void) const;
-			T		back(void) const;
+			iterator 		begin(void);
+			const_iterator	begin(void);
+			iterator 		end(void);
+			const_iterator	end(void);
+			reverse_iterator 		rbegin(void);
+			const_reverse_iterator	rbegin(void);
+			reverse_iterator 		rend(void);
+			const_reverse_iterator	rend(void);
+
 			bool	empty() const;
-			void	push_back(const T &elem);
+			size_type size() const;
+			size_type max_size() const;
+			
+			reference			front(void);
+			const_reference		front(void) const;
+			reference			back(void);
+			const_reference		back(void) const;
+
+			// template <typename InputIt>
+			// void assign(InputIt first, InputIt last);
+			// void assign(size_type n, const value_type& val);
+			iterator insert (iterator position, const value_type& val);
+			void	push_back(const value_type&elem);
 			void	pop_back(void);
-			void	push_front(const T &elem);
+			void	push_front(const value_typ&elem);
 			void	pop_front(void);
 
 };
