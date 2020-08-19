@@ -2,26 +2,18 @@
 #include <limits>
 
 typedef <typename T>
-List<T>::List() : lst(nullptr)
-{
-	this->lst = new t_list();
-	if (this->lst == 0)
-		exit(12);
-	this->lst->size = 0;
-	this->lst->head = nullptr;
-	this->lst->tail = nullptr;
-}
+List<T>::List() : size(0), head(nullptr), tail(nullptr)
+{}
 
 typedef <typename T>
 List<T>::~List()
 {
 	//lst clear하는 함수로 대체
-	if (this->lst)
-		delete this->lst;
+
 }
 
 typedef <typename T>
-List<T>::List(const List & copy)
+List<T>::List(const List & copy) : size(0), head(nullptr), tail(nullptr)
 {
 	*this = copy;
 }
@@ -31,7 +23,9 @@ List<T>& operator=(const List &list)
 {
 	if (this == &list)
 		return (*this);
-
+	this->size = list.size;
+	this->head = list.head;
+	this->tail = list.tail;
 	return (*this);
 }
 
@@ -105,41 +99,33 @@ size_type List<T>::size(void)
 typedef <typename T>
 reference	List<T>::front(void)
 {
-	if (this->lst == nullptr)
+	if (this->head == nullptr)
 		return (0);
-	if (this->lst->head == nullptr)
-		return (0);
-	return (*this->lst->head->data);
+	return (this->head->data);
 }
 
 typedef <typename T>
 const_reference	List<T>::front(void) const
 {
-	if (this->lst == nullptr)
+	if (this->head == nullptr)
 		return (0);
-	if (this->lst->head == nullptr)
-		return (0);
-	return (*this->lst->head->data);
+	return (this->head->data);
 }
 
 typedef <typename T>
 reference	List<T>::back(void)
 {
-	if (this->lst == nullptr)
+	if (this->tail == nullptr)
 		return (0);
-	if (this->lst->tail == nullptr)
-		return (0);
-	return (*this->lst->tail->data);
+	return (this->tail->data);
 }
 
 typedef <typename T>
 const_reference	List<T>::back(void) const
 {
-	if (this->lst == nullptr)
+	if (this->tail == nullptr)
 		return (0);
-	if (this->lst->tail == nullptr)
-		return (0);
-	return (*this->lst->tail->data);
+	return (this->tail->data);
 }
 
 // template <typename T, typename InputIt>
@@ -156,51 +142,110 @@ const_reference	List<T>::back(void) const
 
 iterator List<T>::insert (iterator position, const value_type& val)
 {
-	
+	insert(position, 1, val);
+
+	return (iterator(position.ptr->prev));
 }
 
+void List<T>::insert (iterator position, size_type n, const value_type& val)
+{
+	t_node *cur_node = position.ptr;
+	t_node *left_node = position.ptr->prev;
+
+	for (unsigned int i = 0; i < n; i++)
+	{
+		t_node *new_node = new t_node();
+		
+		new_node->prev = left_node;
+		new_node->next = nullptr;
+		new_node->data = val;
+
+		if (left_node)
+			left_node->next = new_node;
+		else
+			this->head = new_node;
+		++this->size;
+		left_node = new_node;
+	}
+
+	if (cur_node)
+	{
+		cur_node->prev = left_node;
+		left_node->next = cur_node;
+	}
+	else
+		this->tail = left_node;
+
+}
+
+template <class InputIterator>
+void List<T>::insert (iterator position, InputIterator first, InputIterator last)
+{
+	t_node *cur_node = position.ptr;
+	t_node *left_node = position.ptr->prev;
+
+	for (InputIterator ite = first; ite != last; ++ite)
+	{
+		t_node *new_node = new t_node();
+		
+		new_node->prev = left_node;
+		new_node->next = nullptr;
+		new_node->data = *ite;
+
+		if (left_node)
+			left_node->next = new_node;
+		else
+			this->head = new_node;
+		++this->size;
+		left_node = new_node;
+	}
+
+	if (cur_node)
+	{
+		cur_node->prev = left_node;
+		left_node->next = cur_node;
+	}
+	else
+		this->tail = left_node;
+
+}
 
 typedef <typename T>
 void	List<T>::push_back(const value_type& elem)
 {
-	if (this->lst == 0)
-		return ;
-
 	t_list *new_node = new t_node();
 	new_node->data = elem;
 	new_node->prev = nullptr;
 	new_node->next = nullptr;
 
-	t_list *node = this->lst->tail;
+	t_list *node = this->tail;
 	if (node == nullptr)
-		this->lst->head = new_node;
+		this->head = new_node;
 	else
 	{
 		node->next = new_node;
 		new_node->prev = node;
 	}
-	this->lst->tail = new_node;
+	this->tail = new_node;
 	++this->size;
 }
 
 typedef <typename T>
 void	List<T>::pop_back(void)
 {
-	if (this->lst == nullptr)
-		return ;
-	if (this->lst->size == 0)
+	if (this->size == 0)
 		return ;
 
-	t_list *node = this->lst->tail;
-	if (this->lst->size == 1)
+	t_list *node = this->tail;
+	if (this->size == 1)
 	{
-		this->lst->tail = nullptr;
-		this->lst->head = nullptr;
+		this->tail = nullptr;
+		this->head = nullptr;
 	}
 	else
 	{
 		node->prev->next = nullptr;
-		this->lst->tail = node->prev;
+		this->tail = node->prev;
 	}
 	delete node;
 	--this->size;
@@ -209,7 +254,7 @@ void	List<T>::pop_back(void)
 typedef <typename T>
 void	List<T>::push_front(const value_type & elem)
 {
-	if (this->lst == 0)
+	if (this == 0)
 		return ;
 
 	t_list *new_node = new t_node();
@@ -217,36 +262,34 @@ void	List<T>::push_front(const value_type & elem)
 	new_node->prev = nullptr;
 	new_node->next = nullptr;
 
-	t_list *node = this->lst->head;
+	t_list *node = this->head;
 	if (node == nullptr)
-		this->lst->tail = new_node;
+		this->tail = new_node;
 	else
 	{
 		node->prev = new_node;
 		new_node->next = node;
 	}
-	this->lst->head = new_node;
+	this->head = new_node;
 	++this->size;
 }
 
 typedef <typename T>
 void	List<T>::pop_front(void)
 {
-	if (this->lst == nullptr)
-		return ;
-	if (this->lst->size == 0)
+	if (this->size == 0)
 		return ;
 
-	t_list *node = this->lst->head;
-	if (this->lst->size == 1)
+	t_list *node = this->head;
+	if (this->size == 1)
 	{
-		this->lst->tail = nullptr;
-		this->lst->head = nullptr;
+		this->tail = nullptr;
+		this->head = nullptr;
 	}
 	else
 	{
 		node->next->prev = nullptr;
-		this->lst->head = node->next;
+		this->head = node->next;
 	}
 	delete node;
 	--this->size;
