@@ -6,15 +6,15 @@
 
 namespace ft
 {
-	template <typedef T>
+	template <typename T>
 	struct t_node
 	{
-		T		data;
 		t_list	*prev;
 		t_list	*next;
+		T		data;
 	};
 
-	template <typedef T, typdef Category = bidirectional_iterator_flag>
+	template <typename T, typename Category = bidirectional_iterator_flag>
 	class IteratorList
 	{
 		private:
@@ -30,10 +30,7 @@ namespace ft
 
 				IteratorList() {};
 				~IteratorList() {};
-				IteratorList(t_list<T> *list)
-				{
-					this->ptr = list;
-				};
+				IteratorList(t_list<T> *list) : ptr(list) {};
 
 				IteratorList(const IteratorList &copy)
 				{
@@ -104,7 +101,7 @@ namespace ft
 				}
 	};
 
-	template <typename T, typename Allocator = std::allocator<T>>
+	template <typename T, typename Alloc = std::allocator<T>>
 	class List
 	{
 		private:
@@ -112,20 +109,26 @@ namespace ft
 				t_node<T>			*head;
 				t_node<T>			*tail;
 
+				t_node<T>			*begin_;
+				t_node<T>			*end_;
+
 		public:
-				List();
-				~List();
+				explicit List (const allocator_type& alloc = allocator_type());
+				explicit List (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+				template <class InputIterator>
+				List (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 				List(const List<T> &copy);
+				~List();
 				List<T>& operator=(const List<T> &list);
 
 				typedef typename T value_type;
-				typedef typename Allocator allocator_type;
+				typedef typename Alloc allocator_type;
 				typedef typename std::size_t size_type;
 				typedef typename std::ptrdiff_t difference_type;
-				typedef typename Allocator::reference reference;
-				typedef typename Allocator::const_reference const_reference;
-				typedef typename Allocator::pointer pointer;
-				typedef typename Allocator::const_pointer const_pointer;
+				typedef typename Alloc::reference reference;
+				typedef typename Alloc::const_reference const_reference;
+				typedef typename Alloc::pointer pointer;
+				typedef typename Alloc::const_pointer const_pointer;
 				typedef typename IteratorList<T> iterator;
 				typedef typename IteratorList<const T> const_iterator;
 				typedef typename ReverseIterator<Iterator> reverse_iterator;
@@ -149,20 +152,126 @@ namespace ft
 				reference			back(void);
 				const_reference		back(void) const;
 
-				// template <typename InputIt>
-				// void assign(InputIt first, InputIt last);
-				// void assign(size_type n, const value_type& val);
+				template <typename InputIt>
+				void assign(InputIt first, InputIt last);
+				void assign(size_type n, const value_type& val);
 				iterator insert (iterator position, const value_type& val);
 				void insert (iterator position, size_type n, const value_type& val);
 				template <class InputIterator>
 				void insert (iterator position, InputIterator first, InputIterator last);
 
-				void	push_back(const value_type&elem);
+				iterator erase (iterator position);
+				iterator erase (iterator first, iterator last);
+
+				void	swap (list& x);
+
+				void	resize (size_type n, value_type val = value_type());
+
+				void	clear();
+
+				void	splice (iterator position, list& x);
+				void	splice (iterator position, list& x, iterator i);
+				void	splice (iterator position, list& x, iterator first, iterator last);		
+				void	remove (const value_type& val);
+				template <typename Predicate>
+  				void	remove_if (Predicate pred);
+
+				void	unique();
+				template <typename BinaryPredicate>
+  				void	unique (BinaryPredicate binary_pred);
+				
+				void	merge (list& x);
+				template <typename Compare>
+  				void	merge (list& x, Compare comp);
+
+				void	sort();
+				template <typename Compare>
+ 				void	sort (Compare comp);
+
+				void	reverse();
+
+				void	push_back(const value_type & val);
 				void	pop_back(void);
-				void	push_front(const value_typ&elem);
+				void	push_front(const value_type & val);
 				void	pop_front(void);
 
+				template <typename E>
+				friend class ListItertor;
 	};
-}
+
+	template <class T, class Alloc>
+	bool operator== (const list<T, Alloc>& lhs, const list<T, Alloc>& rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return (0);
+		else
+		{
+			typename List<T, Alloc>::iterator l_iter = lhs.begin();
+			typename List<T, Alloc>::iterator r_iter = rhs.begin();
+			for (unsigned int i = 0; i < lhs.size(); ++i)
+			{
+				if (*l_iter != *r_iter)
+					return (0);
+				++l_iter;
+				++r_iter;
+			}
+		}
+		return (1);
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
+	{
+		return (!(lhs == rhs))
+	}
+
+	template <class T, class Alloc>
+	bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
+	{
+		unsigned int n;
+
+		if (lhs.size() < rhs.size())
+			n = lhs.size();
+		else
+			n = rhs.size();
+
+		typename List<T, Alloc>::iterator l_iter = lhs.begin();
+		typename List<T, Alloc>::iterator r_iter = rhs.begin();
+
+		for (unsigned int i = 0; i < n; ++i)
+		{
+			if (*l_iter != *r_iter)
+				return (*l_iter < *r_iter);
+			++l_iter;
+			++r_iter;
+		}
+
+		return (lhs.size() < rhs.size());
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
+	{
+		return (!(rhs < lhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
+	{
+		return (!(lhs < rhs));
+	}
+
+	template <class T, class Alloc>
+  	void swap (list<T, Alloc>& x, list<T, Alloc>& y)
+	{
+		x.swap(y);
+	}
+};
 
 #endif
