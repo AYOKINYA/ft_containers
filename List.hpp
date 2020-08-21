@@ -394,29 +394,21 @@ namespace ft
 
 				iterator erase (iterator first, iterator last)
 				{
+					if (this->length == 0)
+						return (begin());
 
-					t_node<T> *left_node;
-					t_node<T> *right_node;
-
-					if (first.getPtr() == 0 && first.getPtr() != end().getPtr()->prev)
-					{
-						left_node = nullptr;
+					t_node<T> *left_node = first.getPtr()->prev;
+					t_node<T> *right_node = first.getPtr()->next;
+					if (right_node == this->end_)
 						right_node = nullptr;
-					}
-					else
-					{
-						left_node = first.getPtr()->prev;
-						right_node = first.getPtr()->next;
-					}
 
 					iterator ite = first;
 					while (ite != last)
 					{
 						iterator tmp(ite);
 						--this->length;
-
-						if (tmp.getPtr())
-							delete (tmp.getPtr());
+						std::cout << "delete : " << *ite << std::endl;
+						delete (tmp.getPtr());
 						++ite;
 					}
 
@@ -432,6 +424,7 @@ namespace ft
 
 					if (this->length == 0)
 						this->head = nullptr;
+					
 
 					return (last);
 				}

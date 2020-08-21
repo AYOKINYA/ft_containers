@@ -80,16 +80,23 @@ int main()
 	std::cout << "my_list1 front is : " << my_list1.front() << std::endl;
 	std::cout << "my_list1 back is : " << my_list1.back() << std::endl;
 
-	std::cout << "========pop_back===========" << std::endl;
+	std::cout << "========pop_front===========" << std::endl;
 	
 	while (!my_list1.empty())
 	{
 		std::cout << my_list1.front() << std::endl;
 		my_list1.pop_front();
 	}
+
 	std::cout << "========pop_back===========" << std::endl;
 
-	std::cout << "========= assign ==========" << std::endl;
+	while (!my_list2.empty())
+	{
+		std::cout << my_list2.back() << std::endl;
+		my_list2.pop_back();
+	}
+
+	// std::cout << "========= assign ==========" << std::endl;
 
 	// ft::List<int> my_list5;
 	// my_list5.assign(my_list1.begin(), my_list1.end());
