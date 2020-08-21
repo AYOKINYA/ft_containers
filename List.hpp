@@ -132,6 +132,7 @@ namespace ft
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
+					this->end_->data = 0;
 					
 				}
 
@@ -142,6 +143,7 @@ namespace ft
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
+					this->end_->data = 0;
 
 					insert(begin(), n, val);
 				}
@@ -153,6 +155,7 @@ namespace ft
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
+					this->end_->data = 0;
 					
 					insert(begin(), first, last);
 				}
@@ -164,7 +167,6 @@ namespace ft
 
 				~List()
 				{
-					std::cout << "<length> " << this->length << std::endl;
 					if (this->length)
 						clear();
 					if (this->end_)
@@ -178,10 +180,13 @@ namespace ft
 					
 					if (this->length)
 						clear();
-					// if (this->end_)
-					// 	delete (this->end_);
+					if (this->end_)
+						delete (this->end_);
 
-					this->end_ = List.end_;
+					this->end_ = new t_node<T>();
+					this->end_->next = List.end_->next;
+					this->end_->prev = List.end_->prev;
+					this->end_->data = 0;
 					
 					insert(begin(), List.begin(), List.end());
 					
@@ -409,9 +414,9 @@ namespace ft
 					{
 						iterator tmp(ite);
 						--this->length;
-						std::cout << "delete : " << tmp.getPtr()->data << std::endl;
-						// if (tmp.getPtr())
-						// 	delete (tmp.getPtr());
+
+						if (tmp.getPtr())
+							delete (tmp.getPtr());
 						++ite;
 					}
 
