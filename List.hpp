@@ -26,7 +26,7 @@ namespace ft
 				typedef std::ptrdiff_t		difference_type;
 				typedef T*					pointer;
 				typedef T&					reference;
-				typedef Category			category;
+				typedef Category			iterator_category;
 
 				IteratorList() {};
 				~IteratorList() {};
