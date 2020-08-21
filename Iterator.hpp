@@ -82,6 +82,7 @@ namespace ft
 					--tmp;
 					return (*tmp);
 				}
+
 				ReverseIterator<Iterator> operator+(difference_type n) const
 				{
 					return (base_ - n);
@@ -95,13 +96,16 @@ namespace ft
 
 				ReverseIterator<Iterator> operator++(int)
 				{
-					ReverseIterator<Iterator> ite(base_++);
+					ReverseIterator<Iterator> ite(base_--);
 					return (ite);
 				}
 
 				ReverseIterator<Iterator>& operator+=(difference_type n)
 				{
-					base_ -= n;
+					//base_ -= n;
+					while (n--)
+						--base_;
+
 					return (*this);
 				}
 
@@ -118,13 +122,16 @@ namespace ft
 
 				ReverseIterator<Iterator> operator--(int)
 				{
-					ReverseIterator<Iterator> ite(base_--);
+					ReverseIterator<Iterator> ite(base_++);
 					return (ite);
 				}
 
 				ReverseIterator<Iterator>& operator-=(difference_type n)
 				{
-					base_ += n;
+					// base_ += n;
+					while (n--)
+						++base_;
+					
 					return (*this);
 				}
 

@@ -109,13 +109,12 @@ namespace ft
 				t_node<T>			*head;
 				t_node<T>			*tail;
 
-				t_node<T>			*begin_;
 				t_node<T>			*end_;
 
 		public:
 				typedef T 								value_type;
 				typedef Alloc							allocator_type;
-				typedef size_t						size_type;
+				typedef size_t							size_type;
 				typedef std::ptrdiff_t					difference_type;
 				typedef typename Alloc::reference		reference;
 				typedef typename Alloc::const_reference	const_reference;
@@ -128,28 +127,29 @@ namespace ft
 
 
 				explicit List()
-					: length(0), head(nullptr), tail(nullptr)
+					: length(0), head(nullptr), tail(nullptr), end_(nullptr)
 				{
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
-
+					
 				}
 
 				explicit List(size_type n, const value_type& val = value_type())
-					: length(0), head(nullptr), tail(nullptr)
+					: length(0), head(nullptr), tail(nullptr), end_(nullptr)
 				{
 
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
+
 					
 					insert(begin(), n, val);
 				}
 
 				template <class InputIterator>
 				List(InputIterator first, InputIterator last)
-					: length(0), head(nullptr), tail(nullptr)
+					: length(0), head(nullptr), tail(nullptr), end_(nullptr)
 				{
 					this->end_ = new t_node<T>();
 					this->end_->next = nullptr;
@@ -158,14 +158,13 @@ namespace ft
 					insert(begin(), first, last);
 				}
 
-				List(const List<T> &copy): length(0), head(nullptr), tail(nullptr)
+				List(const List<T> &copy): length(0), head(nullptr), tail(nullptr), end_(nullptr)
 				{
 					*this = copy;
 				}
 
 				~List()
 				{
-					clear();
 					delete (this->end_);
 				}
 
@@ -175,11 +174,13 @@ namespace ft
 						return (*this);
 					
 					clear();
-					delete (this->end_);
+					if (this->end_)
+						delete (this->end_);
 
 					this->end_ = List.end_;
+					
 					insert(begin(), List.begin(), List.end());
-
+					
 					return (*this);
 				}
 
@@ -190,7 +191,7 @@ namespace ft
 
 				const_iterator	begin(void) const
 				{
-					return (const_iterator(this->head));
+					return (const_iterator((t_node<const T>*)this->head));
 				}
 
 				iterator 		end(void)
@@ -200,7 +201,7 @@ namespace ft
 
 				const_iterator	end(void) const
 				{
-					return (const_iterator(this->end_));
+					return (const_iterator((t_node<const T>*)this->end_));
 				}
 
 				reverse_iterator 		rbegin(void)
@@ -240,29 +241,21 @@ namespace ft
 				
 				reference			front(void)
 				{
-					if (this->head == nullptr)
-						return (0);
 					return (this->head->data);
 				}
 
 				const_reference		front(void) const
 				{
-					if (this->head == nullptr)
-						return (0);
 					return (this->head->data);
 				}
 
 				reference			back(void)
 				{
-					if (this->tail == nullptr)
-						return (0);
 					return (this->tail->data);
 				}
 
 				const_reference		back(void) const
 				{
-					if (this->tail == nullptr)
-						return (0);
 					return (this->tail->data);
 				}
 
@@ -282,23 +275,31 @@ namespace ft
 				{
 					insert(position, (std::size_t)1, val);
 					
-					if (position == begin())
-						return (iterator(this->head));
+					if (position == begin() || position == end())
+						return (position);
 					else
-						return (iterator(position));
+						return (iterator(position.getPtr()->prev));
 				}
 
 				void insert(iterator position, size_type n, const value_type& val)
 				{
 					t_node<T> *cur_node;
+					t_node<T> *left_node;
 
-					if (position == begin())
+					if (this->length == 0 && position != end())
+					{
 						cur_node = nullptr;
+						left_node = nullptr;
+					}
 					else
+					{
 						cur_node = position.getPtr();
-
-					t_node<T> *left_node = position.getPtr()->prev;
-
+						if (cur_node == nullptr)
+							left_node = nullptr;
+						else
+							left_node = position.getPtr()->prev;
+					}
+					
 					for (unsigned int i = 0; i < n; i++)
 					{
 						t_node<T> *new_node = new t_node<T>();
@@ -310,7 +311,7 @@ namespace ft
 						if (left_node)
 							left_node->next = new_node;
 						else
-							this->head = new_node;
+							this->head = new_node; 
 						++this->length;
 						left_node = new_node;
 					}
@@ -321,18 +322,32 @@ namespace ft
 					}
 					else
 						this->tail = left_node;
+					
+					if (position == end())
+						this->tail = left_node;
+					this->tail->next = end_;
 				}
 
 				template <class InputIterator>
 				void insert (iterator position, InputIterator first, InputIterator last)
 				{
 					t_node<T> *cur_node;
-					if (this->length == 0)
-						cur_node = 0;
-					else
-						cur_node = position.getPtr();
-					t_node<T> *left_node = position.getPtr()->prev;
+					t_node<T> *left_node;
 
+					if (this->length == 0 && position != end())
+					{
+						cur_node = nullptr;
+						left_node = nullptr;
+					}
+					else
+					{
+						cur_node = position.getPtr();
+						if (cur_node == nullptr)
+							left_node = nullptr;
+						else
+							left_node = position.getPtr()->prev;
+					}
+					
 					for (InputIterator ite = first; ite != last; ++ite)
 					{
 						t_node<T> *new_node = new t_node<T>();
@@ -344,11 +359,10 @@ namespace ft
 						if (left_node)
 							left_node->next = new_node;
 						else
-							this->head = new_node;
+							this->head = new_node; 
 						++this->length;
 						left_node = new_node;
 					}
-
 					if (cur_node)
 					{
 						cur_node->prev = left_node;
@@ -356,6 +370,10 @@ namespace ft
 					}
 					else
 						this->tail = left_node;
+					
+					if (position == end())
+						this->tail = left_node;
+					this->tail->next = end_;
 				}
 
 				iterator erase (iterator position)
@@ -369,6 +387,7 @@ namespace ft
 				{
 					if (this->length == 0)
 						return begin();
+
 					t_node<T> *left_node;
 					t_node<T> *right_node;
 					if (first.getPtr() == 0)
