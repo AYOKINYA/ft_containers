@@ -143,7 +143,6 @@ namespace ft
 					this->end_->next = nullptr;
 					this->end_->prev = this->tail;
 
-					
 					insert(begin(), n, val);
 				}
 
@@ -165,7 +164,11 @@ namespace ft
 
 				~List()
 				{
-					delete (this->end_);
+					std::cout << "<length> " << this->length << std::endl;
+					if (this->length)
+						clear();
+					if (this->end_)
+						delete (this->end_);
 				}
 
 				List<T>& operator=(const List<T> &List)
@@ -173,9 +176,10 @@ namespace ft
 					if (this == &List)
 						return (*this);
 					
-					clear();
-					if (this->end_)
-						delete (this->end_);
+					if (this->length)
+						clear();
+					// if (this->end_)
+					// 	delete (this->end_);
 
 					this->end_ = List.end_;
 					
@@ -385,12 +389,11 @@ namespace ft
 
 				iterator erase (iterator first, iterator last)
 				{
-					if (this->length == 0)
-						return begin();
 
 					t_node<T> *left_node;
 					t_node<T> *right_node;
-					if (first.getPtr() == 0)
+
+					if (first.getPtr() == 0 && first.getPtr() != end().getPtr()->prev)
 					{
 						left_node = nullptr;
 						right_node = nullptr;
@@ -400,13 +403,16 @@ namespace ft
 						left_node = first.getPtr()->prev;
 						right_node = first.getPtr()->next;
 					}
+
 					iterator ite = first;
 					while (ite != last)
 					{
 						iterator tmp(ite);
 						--this->length;
+						std::cout << "delete : " << tmp.getPtr()->data << std::endl;
+						// if (tmp.getPtr())
+						// 	delete (tmp.getPtr());
 						++ite;
-						delete (tmp.getPtr()->next);
 					}
 
 					if (left_node)
@@ -419,8 +425,9 @@ namespace ft
 					else
 						this->tail = left_node;
 
-					last.getPtr()->prev = first.getPtr();
-					//first.ptr은 위에서 계속 조작해서 따로 해줄 필요 없다.
+					if (this->length == 0)
+						this->head = nullptr;
+
 					return (last);
 				}
 
