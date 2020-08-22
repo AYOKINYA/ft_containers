@@ -497,8 +497,6 @@ namespace ft
 				void	splice (iterator position, List& x, iterator first, iterator last)
 				{
 					insert(position, first, last);
-					for (iterator iter = x.begin(); iter != x.end(); ++iter)
-						std::cout << ' ' << *iter;
 					x.erase(first, last);
 				}
 
@@ -532,16 +530,26 @@ namespace ft
 					if (this->length < 2)
 						return ;
 
-					iterator iter = end();
-					--iter;
-					while (iter != begin())
+					iterator first;
+					iterator second;
+					iterator tmp;
+
+					first = begin();
+					while (first != end())
 					{
-						iterator tmp = iter;
-						--tmp;
-						if (*tmp == *iter)
-							iter = erase(tmp);
-						else
-							--iter;
+						second = first;
+						++second;
+						while (second != end())
+						{
+							tmp = second;
+							if (*first == *second)
+							{
+								erase(second);
+								second = tmp;
+							}
+							++second;
+						}
+						++first;
 					}
 				}
 
@@ -551,16 +559,26 @@ namespace ft
 					if (this->length < 2)
 						return ;
 
-					iterator iter = end();
-					--iter;
-					while (iter != begin())
+					iterator first;
+					iterator second;
+					iterator tmp;
+
+					first = begin();
+					while (first != end())
 					{
-						iterator tmp = iter;
-						--tmp;
-						if (binary_pred(*tmp, *iter))
-							iter = erase(tmp);
-						else
-							--iter;
+						second = first;
+						++second;
+						while (second != end())
+						{
+							tmp = second;
+							if (binary_pred(*first, *second))
+							{
+								erase(second);
+								second = tmp;
+							}
+							++second;
+						}
+						++first;
 					}
 				}
 
@@ -656,18 +674,22 @@ namespace ft
 
 				void	sort()
 				{
-					iterator iter = begin();
-					iterator tmp = iterator(iter);
-					while (iter != end())
+					iterator first;
+					iterator second;
+
+					for (unsigned int i = 0; i < this->length ; ++i)
 					{
-						tmp = iter;
-						++iter;
-						if (iter == end())
-							break ;
-						if (*iter < *tmp)
+						first = this->begin();
+						second = first;
+						++second;
+						while (second != end())
 						{
-							std::swap(*tmp, *iter);
-							iter = begin();
+							if (*second < *first)
+								splice(first, *this, second);
+							else
+								++first;
+							second = first;
+							++second;
 						}
 					}
 				}
@@ -675,33 +697,37 @@ namespace ft
 				template <typename Compare>
 				void	sort(Compare comp)
 				{
-					iterator iter = begin();
-					iterator tmp = iterator(iter);
-					while (iter != end())
+					iterator first;
+					iterator second;
+
+					for (unsigned int i = 0; i < this->length ; ++i)
 					{
-						tmp = iter;
-						++iter;
-						if (iter == end())
-							break ;
-						if (comp(*iter, *tmp))
+						first = this->begin();
+						second = first;
+						++second;
+						while (second != end())
 						{
-							std::swap(*tmp, *iter);
-							iter = begin();
+							if (comp(*second, *first))
+								splice(first, *this, second);
+							else
+								++first;
+							second = first;
+							++second;
 						}
 					}
 				}
 
 				void	reverse()
 				{
-					iterator start = begin();
-					iterator end = end();
-					--end;
+					iterator start = this->begin();
+					iterator last = this->end();
+					--last;
 
 					for (unsigned int i = 0; i < this->length / 2; ++i)
 					{
-						std::swap(*start, *end);
+						std::swap(*start, *last);
 						++start;
-						--end;
+						--last;
 					}
 				}
 

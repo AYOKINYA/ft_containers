@@ -2,6 +2,35 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include <cmath>
+
+struct is_odd 
+{
+	bool operator() (const int& value) { return (value%2)==1; }
+};
+
+bool single_digit(const int & value)
+{
+	return (value < 10);
+}
+
+bool same_integral_part (double first, double second)
+{ return ( int(first)==int(second) ); }
+
+// a binary predicate implemented as a class:
+struct is_near {
+	bool operator() (double first, double second)
+	{ 
+		return (fabs(first-second)<5.0); 
+	}
+};
+
+bool mycomparison (double first, double second)
+{
+	return ( int(first < int(second) );
+
+}
+
 
 int main()
 {
@@ -217,6 +246,102 @@ int main()
 	std::cout << '\n';
 
 	std::cout << "========= remove ==========" << std::endl;
+
+	int my_ints[]= {17,89,7,14};
+	ft::List<int> mylist3 (my_ints, my_ints + 4);
+
+	std::cout << "mylist contains:";
+	for (ft::List<int>::iterator it=mylist3.begin(); it!=mylist3.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	mylist3.remove(89);
+	std::cout << "remove 89" << std::endl;
+
+	std::cout << "mylist contains:";
+	for (ft::List<int>::iterator it=mylist3.begin(); it!=mylist3.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << "========= remove_if ==========" << std::endl;
+	
+
+	int my_ints2[]= {15,36,7,17,20,39,4,1};
+	ft::List<int> mylist4 (my_ints2 , my_ints2 + 8);   // 15 36 7 17 20 39 4 1
+
+	mylist4.remove_if (single_digit);           // 15 36 17 20 39
+
+	mylist4.remove_if (is_odd());               // 36 20
+
+	std::cout << "mylist contains:";
+	for (ft::List<int>::iterator it = mylist4.begin(); it != mylist4.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "========= sort & unique ==========" << std::endl;
+	double mydoubles[]={ 12.15,  2.72, 73.0,  12.77,  3.14,
+                       12.77, 73.35, 72.25, 15.3,  72.25 };
+	ft::List<double> mylist5 (mydoubles,mydoubles+10);
+	
+	std::cout << "mylist contains:";
+	for (ft::List<double>::iterator it=mylist5.begin(); it!=mylist5.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	
+	mylist5.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
+								// 15.3,  72.25, 72.25, 73.0,  73.35
+
+	std::cout << "SORTED mylist contains:";
+	for (ft::List<double>::iterator it=mylist5.begin(); it!=mylist5.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "SORTED mylist in reverse:";
+	for (ft::List<double>::reverse_iterator it=mylist5.rbegin(); it!=mylist5.rend(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	mylist5.unique();           //  2.72,  3.14, 12.15, 12.77
+								// 15.3,  72.25, 73.0,  73.35
+	for (ft::List<double>::iterator it=mylist5.begin(); it!=mylist5.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	mylist5.unique (same_integral_part);  //  2.72,  3.14, 12.15
+										// 15.3,  72.25, 73.0
+
+	mylist5.unique (is_near());           //  2.72, 12.15, 72.25
+
+	std::cout << "mylist contains:";
+	for (ft::List<double>::iterator it=mylist5.begin(); it!=mylist5.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "SORTED mylist in reverse:";
+	for (ft::List<double>::reverse_iterator it=mylist5.rbegin(); it!=mylist5.rend(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "========= reverse ==========" << std::endl;
+	
+	ft::List<int> mylist6;
+	for (int i=1; i<10; ++i)
+		mylist6.push_back(i);
+
+	mylist6.reverse();
+	
+	std::cout << "mylist contains:";
+	for (ft::List<int>::iterator it = mylist6.begin(); it != mylist6.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << "Reverse to reverse:";
+	for (ft::List<int>::reverse_iterator it = mylist6.rbegin(); it != mylist6.rend(); ++it)
+		std::cout << ' ' << *it;
+
+	std::cout << '\n';
+	std::cout << "SORTED mylist in reverse:";
+	std::cout << '\n';
+
+	std::cout << "========= merge ==========" << std::endl;
 
 	return (0);
 }
