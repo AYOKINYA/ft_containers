@@ -29,6 +29,18 @@ int main()
 	for (ft::List<int>::iterator it = my_list2.begin(); it != my_list2.end(); ++it)
     	std::cout << '<' << *it << '>';
   	std::cout << '\n';
+
+	ft::List<int>::reverse_iterator rit = my_list2.rbegin();
+	int i = 0;
+	while (i++ < 10 && rit != my_list2.rend())
+		std::cout << " " << *rit++;
+	std::cout << '\n';
+
+	for (ft::List<int>::reverse_iterator rit = my_list1.rbegin(); rit != my_list1.rend(); ++rit)
+		std::cout << " " << *rit;
+	std::cout << '\n';
+	std::cout << "==================" << std::endl;
+
 	
 	ft::List<int> my_list3((unsigned int)3, 5);
 	for (ft::List<int>::iterator it = my_list3.begin(); it != my_list3.end(); ++it)
@@ -96,10 +108,10 @@ int main()
 		my_list2.pop_back();
 	}
 
-	// std::cout << "========= assign ==========" << std::endl;
+	std::cout << "========= assign ==========" << std::endl;
 
-	// ft::List<int> my_list5;
-	// my_list5.assign(my_list1.begin(), my_list1.end());
+	ft::List<int> my_list5;
+	my_list5.assign(my_list1.begin(), my_list1.end());
 
 	// std::list<int> first;
 	// std::list<int> second;

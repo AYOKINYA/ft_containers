@@ -182,14 +182,14 @@ namespace ft
 						clear();
 					if (this->end_)
 						delete (this->end_);
-
+	
 					this->end_ = new t_node<T>();
-					this->end_->next = List.end_->next;
+					this->end_->next = nullptr;
 					this->end_->prev = List.end_->prev;
 					this->end_->data = 0;
 					
 					insert(begin(), List.begin(), List.end());
-					
+					this->end_->prev = this->tail;
 					return (*this);
 				}
 
@@ -334,7 +334,7 @@ namespace ft
 					
 					if (position == end())
 						this->tail = left_node;
-					this->tail->next = end_;
+					this->tail->next = this->end_;
 				}
 
 				template <class InputIterator>
@@ -372,6 +372,7 @@ namespace ft
 						++this->length;
 						left_node = new_node;
 					}
+
 					if (cur_node)
 					{
 						cur_node->prev = left_node;
@@ -382,7 +383,9 @@ namespace ft
 					
 					if (position == end())
 						this->tail = left_node;
-					this->tail->next = end_;
+
+					this->tail->next = this->end_;
+
 				}
 
 				iterator erase (iterator position)
@@ -399,16 +402,15 @@ namespace ft
 
 					t_node<T> *left_node = first.getPtr()->prev;
 					t_node<T> *right_node = first.getPtr()->next;
-					if (right_node == this->end_)
-						right_node = nullptr;
 
 					iterator ite = first;
+
 					while (ite != last)
 					{
 						iterator tmp(ite);
-						--this->length;
 						std::cout << "delete : " << *ite << std::endl;
 						delete (tmp.getPtr());
+						--this->length;
 						++ite;
 					}
 
@@ -422,9 +424,14 @@ namespace ft
 					else
 						this->tail = left_node;
 
+					if (last == end())
+						this->tail = left_node;
+
 					if (this->length == 0)
+					{
 						this->head = nullptr;
-					
+						this->tail = nullptr;
+					}
 
 					return (last);
 				}
