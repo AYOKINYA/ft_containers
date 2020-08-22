@@ -304,7 +304,7 @@ namespace ft
 					else
 					{
 						cur_node = position.getPtr();
-						if (cur_node == nullptr)
+						if (cur_node == nullptr || begin().getPtr() == nullptr)
 							left_node = nullptr;
 						else
 							left_node = position.getPtr()->prev;
@@ -398,8 +398,8 @@ namespace ft
 
 				iterator erase (iterator first, iterator last)
 				{
-					if (this->length == 0)
-						return (begin());
+					if (this->length == 0 || first.getPtr() == nullptr)
+						return (iterator(this->head));
 
 					t_node<T> *left_node = first.getPtr()->prev;
 
@@ -408,7 +408,8 @@ namespace ft
 					while (ite != last)
 					{
 						iterator tmp(ite);
-						delete (tmp.getPtr());
+						if (tmp.getPtr())
+							delete (tmp.getPtr());
 						--this->length;
 						++ite;
 					}
@@ -456,9 +457,6 @@ namespace ft
 				void 	clear()
 				{
 					erase(begin(), end());
-					this->head = nullptr;
-					this->tail = nullptr;
-					this->length = 0;
 				}
 
 				void	push_front(const value_type & val)
@@ -598,9 +596,10 @@ namespace ft
 						iter = this->begin();
 					if (x.length)
 						x_iter = x.begin();
+
 					while (x.length)
 					{
-						while (size && (iter != end()) && !(*x_iter < *iter))
+						while (size && (iter != end()) && !(*x_iter, *iter))
 							++iter;
 						next = x_iter;
 						if (x.length != 1)

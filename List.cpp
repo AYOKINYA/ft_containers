@@ -355,32 +355,40 @@ int main()
 	k.push_back (1.4);
 	
 	j.sort();
-	k.sort();
-
-	j.merge(k);
-
 	std::cout << "first contains:";
-
 	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
+	k.sort();
+	std::cout << "first contains:";
+	for (ft::List<double>::iterator it = k.begin(); it != k.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	j.merge(k);
 	
+	std::cout << "first contains:";
+	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
 	std::cout << "=====================" << std::endl;
 
 	k.push_back(2.1);
 
-	// for (ft::List<double>::iterator it = k.begin(); it != k.end(); ++it)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
+	std::cout << "=====================" << std::endl;
 
-	// std::cout << "firstasdasdass:";
+	for (ft::List<double>::iterator it = k.begin(); it != k.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
 
+	std::cout << "=====================" << std::endl;
+	j.merge(k, my_comparison);
 
-	// j.merge(k, my_comparison);
-
-	// std::cout << "first contains:";
-	// for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
-	// return (0);
+	std::cout << "first contains:";
+	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << "=====================" << std::endl;
+	return (0);
 }
