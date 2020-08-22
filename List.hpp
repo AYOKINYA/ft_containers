@@ -401,36 +401,36 @@ namespace ft
 						return (begin());
 
 					t_node<T> *left_node = first.getPtr()->prev;
-					t_node<T> *right_node = first.getPtr()->next;
 
 					iterator ite = first;
 
 					while (ite != last)
 					{
 						iterator tmp(ite);
-						std::cout << "delete : " << *ite << std::endl;
 						delete (tmp.getPtr());
 						--this->length;
 						++ite;
 					}
-					std::cout << "left " << *ite << std::endl;
-
-					if (left_node)
-						left_node->next = right_node;
-					else
-						this->head = right_node;
 					
-					if (right_node)
-						right_node->prev = left_node;
-					else
-						this->tail = left_node;
-
-					if (last == end())
-						this->tail = left_node;
 					if (this->length == 0)
 					{
 						this->head = nullptr;
 						this->tail = nullptr;
+					}
+					else
+					{
+						if (left_node)
+							left_node->next = last.getPtr();
+						else
+							this->head = last.getPtr();
+
+						last.getPtr()->prev = left_node;
+
+						if (last == end())
+						{
+							this->tail = left_node;
+							left_node->next = last.getPtr();
+						}			
 					}
 
 					return (last);
