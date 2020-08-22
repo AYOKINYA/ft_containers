@@ -336,6 +336,7 @@ namespace ft
 					if (position == end())
 						this->tail = left_node;
 					this->tail->next = this->end_;
+					this->end_->prev = this->tail;
 				}
 
 				template <class InputIterator>
@@ -345,14 +346,14 @@ namespace ft
 					t_node<T> *left_node;
 
 					if (this->length == 0 && position != end())
-					{
+					{	
 						cur_node = nullptr;
 						left_node = nullptr;
 					}
 					else
 					{
 						cur_node = position.getPtr();
-						if (cur_node == nullptr)
+						if (cur_node == nullptr || begin().getPtr() == nullptr)
 							left_node = nullptr;
 						else
 							left_node = position.getPtr()->prev;
@@ -386,7 +387,7 @@ namespace ft
 						this->tail = left_node;
 
 					this->tail->next = this->end_;
-
+					this->end_->prev = this->tail;
 				}
 
 				iterator erase (iterator position)
@@ -599,7 +600,7 @@ namespace ft
 
 					while (x.length)
 					{
-						while (size && (iter != end()) && !(*x_iter, *iter))
+						while (size && (iter != end()) && !(*x_iter < *iter))
 							++iter;
 						next = x_iter;
 						if (x.length != 1)
@@ -633,7 +634,7 @@ namespace ft
 						x_iter = x.begin();
 					while (x.length)
 					{
-						while (size && (iter != end()) && comp(*x_iter, *iter))
+						while (size && (iter != end()) && !comp(*x_iter, *iter))
 							++iter;
 						next = x_iter;
 						if (x.length != 1)
@@ -719,8 +720,8 @@ namespace ft
 			return (0);
 		else
 		{
-			typename List<T, Alloc>::iterator l_iter = lhs.begin();
-			typename List<T, Alloc>::iterator r_iter = rhs.begin();
+			typename List<T, Alloc>::const_iterator l_iter = lhs.begin();
+			typename List<T, Alloc>::const_iterator r_iter = rhs.begin();
 			for (unsigned int i = 0; i < lhs.size(); ++i)
 			{
 				if (*l_iter != *r_iter)
@@ -742,14 +743,14 @@ namespace ft
 	bool operator<  (const List<T,Alloc>& lhs, const List<T,Alloc>& rhs)
 	{
 		unsigned int n;
-
+		
 		if (lhs.size() < rhs.size())
 			n = lhs.size();
 		else
 			n = rhs.size();
 
-		typename List<T, Alloc>::iterator l_iter = lhs.begin();
-		typename List<T, Alloc>::iterator r_iter = rhs.begin();
+		typename List<T, Alloc>::const_iterator l_iter = lhs.begin();
+		typename List<T, Alloc>::const_iterator r_iter = rhs.begin();
 
 		for (unsigned int i = 0; i < n; ++i)
 		{
@@ -758,6 +759,7 @@ namespace ft
 			++l_iter;
 			++r_iter;
 		}
+		
 
 		return (lhs.size() < rhs.size());
 	}

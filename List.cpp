@@ -28,7 +28,6 @@ struct is_near {
 bool my_comparison (double first, double second)
 {
 	return ( int(first) < int(second) );
-
 }
 
 
@@ -154,6 +153,7 @@ int main()
 	ft::List<int> a ((unsigned int)3,100);   // three ints with a value of 100
 	ft::List<int> b ((unsigned int)5,200);  // five ints with a value of 200
 
+	
 	a.swap(b);
 
 	std::cout << "first contains:";
@@ -162,10 +162,23 @@ int main()
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 
+	std::cout << "by reverse iterator:";
+
+	for (ft::List<int>::reverse_iterator it=a.rbegin(); it!=a.rend(); it++)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
 	std::cout << "second contains:";
 	for (ft::List<int>::iterator it=b.begin(); it!=b.end(); it++)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
+
+	std::cout << "by reverse iterator:";
+
+	for (ft::List<int>::reverse_iterator it=b.rbegin(); it!=b.rend(); it++)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
 
 	std::cout << "========= resize ==========" << std::endl;
 
@@ -367,7 +380,7 @@ int main()
 
 	j.merge(k);
 	
-	std::cout << "first contains:";
+	std::cout << "second contains:";
 	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
@@ -389,6 +402,53 @@ int main()
 	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
+	std::cout << "==========non_member function overloads===========" << std::endl;
+	std::cout << "==========realtional operators===========" << std::endl;
+
+	ft::List<int> p, q, r;
+	for (int i = 1; i < 4; ++i)
+		p.push_back(i*10);		// 10 20 30
+	for (int i = 1; i < 4; ++i)
+		q.push_back(i*10);		// 10 20 30
+	for (int i = 3; i > 0; --i)
+		r.push_back(i*10);		// 30 20 10
+	if (p == q) std::cout << "p and q are equal\n";
+	if (q != r) std::cout << "q and r are not equal\n";
+
+	if (q < r) std::cout << "q is less than r\n";
+	if (r > q) std::cout << "r is greater than q\n";
+
+	if (p <= q) std::cout << "p is less than or equal to q\n";
+	if (p >= q) std::cout << "p is greater than or equal to q\n";
+
+	std::cout << "==========realtional operators===========" << std::endl;
+
+	ft::List<int> foo ((unsigned int)3,100);   // three ints with a value of 100
+	ft::List<int> bar ((unsigned int)5,200);   // five ints with a value of 200
+
+	foo.swap(bar);
+
+	std::cout << "foo contains:";
+	for (ft::List<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "by reverse iterator";
+	for (ft::List<int>::reverse_iterator it = foo.rbegin(); it!=foo.rend(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "bar contains:";
+	for (ft::List<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "by reverse iterator";
+	for (ft::List<int>::reverse_iterator it = bar.rbegin(); it!=bar.rend(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
 	std::cout << "=====================" << std::endl;
+
 	return (0);
 }
