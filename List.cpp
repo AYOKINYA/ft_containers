@@ -25,9 +25,9 @@ struct is_near {
 	}
 };
 
-bool mycomparison (double first, double second)
+bool my_comparison (double first, double second)
 {
-	return ( int(first < int(second) );
+	return ( int(first) < int(second) );
 
 }
 
@@ -343,5 +343,44 @@ int main()
 
 	std::cout << "========= merge ==========" << std::endl;
 
-	return (0);
+	ft::List<double> j;
+	ft::List<double> k;
+
+	j.push_back (3.1);
+	j.push_back (2.2);
+	j.push_back (2.9);
+
+	k.push_back (3.7);
+	k.push_back (7.1);
+	k.push_back (1.4);
+	
+	j.sort();
+	k.sort();
+
+	j.merge(k);
+
+	std::cout << "first contains:";
+
+	for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	
+	std::cout << "=====================" << std::endl;
+
+	k.push_back(2.1);
+
+	// for (ft::List<double>::iterator it = k.begin(); it != k.end(); ++it)
+	// 	std::cout << ' ' << *it;
+	// std::cout << '\n';
+
+	// std::cout << "firstasdasdass:";
+
+
+	// j.merge(k, my_comparison);
+
+	// std::cout << "first contains:";
+	// for (ft::List<double>::iterator it = j.begin(); it != j.end(); ++it)
+	// 	std::cout << ' ' << *it;
+	// std::cout << '\n';
+	// return (0);
 }

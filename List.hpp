@@ -167,6 +167,7 @@ namespace ft
 
 				~List()
 				{
+					
 					if (this->length)
 						clear();
 					if (this->end_)
@@ -587,44 +588,32 @@ namespace ft
 					if (this == &x)
 						return ;
 					
-					t_node<T> *my_node = this->head;
-					t_node<T> *x_node = x.head;
-					t_node<T> *x_tmp;
+					size_type size;
+					iterator iter;
+					iterator x_iter;
+					iterator next;
 
-					while (x_node != nullptr)
+					size = this->length;
+					if (size)
+						iter = this->begin();
+					if (x.length)
+						x_iter = x.begin();
+					while (x.length)
 					{
-						if (my_node->data <= x_node->data && my_node != this->tail)
-							my_node = my_node->next;
-						else if (my_node->data > x_node->data)
-						{
-							x_tmp = x_node->next;
-
-							if (my_node != this->head)
-							{
-								my_node->prev->next = x_node;
-								x_node->prev = my_node->prev;
-							}
-							else
-								this->head = x_node;
-							x_node->next = my_node;
-							my_node->prev = x_node;
-							
-							x_node = x_tmp;
-						}
+						while (size && (iter != end()) && !(*x_iter < *iter))
+							++iter;
+						next = x_iter;
+						if (x.length != 1)
+							++next;
+						if (size && iter != end())
+							splice(iter, x, x_iter);
 						else
 						{
-							x_tmp = x_node->next;
-
-							my_node->next = x_node;
-							x_node->prev = my_node;
-							this->tail = x_node;
-							my_node = my_node->next;
-
-							x_node = x_tmp;
+							this->push_back(*x_iter);
+							x.erase(x_iter);
 						}
+						x_iter = next;
 					}
-					this->length += x.length;
-					x.clear(); // x를 아예 없애도 가능한가?
 				}
 
 				template <typename Compare>
@@ -632,44 +621,33 @@ namespace ft
 				{
 					if (this == &x)
 						return ;
-					
-					t_node<T> *my_node = this->head;
-					t_node<T> *x_node = x.head;
-					t_node<T> *x_tmp;
 
-					while (x_node != nullptr)
+					size_type size;
+					iterator iter;
+					iterator x_iter;
+					iterator next;
+
+					size = this->length;
+					if (size)
+						iter = this->begin();
+					if (x.length)
+						x_iter = x.begin();
+					while (x.length)
 					{
-						if (comp(my_node->data, x_node->data) && my_node != this->tail)
-							my_node = my_node->next;
-						else if (!comp(my_node->data, x_node->data))
-						{
-							x_tmp = x_node->next;
-
-							if (my_node != this->head)
-							{
-								my_node->prev->next = x_node;
-								x_node->prev = my_node->prev;
-							}
-							else
-								this->head = x_node;
-							x_node->next = my_node;
-							my_node->prev = x_node;
-							
-							x_node = x_tmp;
-						}
+						while (size && (iter != end()) && comp(*x_iter, *iter))
+							++iter;
+						next = x_iter;
+						if (x.length != 1)
+							++next;
+						if (size && iter != end())
+							splice(iter, x, x_iter);
 						else
 						{
-							x_tmp = x_node->next;
-
-							my_node->next = x_node;
-							x_node->prev = my_node;
-							this->tail = x_node;
-							my_node = my_node->next;
-							x_node = x_tmp;
+							this->push_back(*x_iter);
+							x.erase(x_iter);
 						}
+						x_iter = next;
 					}
-					this->length += x.length;
-					x.clear(); // x를 아예 없애도 가능한가?
 				}
 
 				void	sort()
