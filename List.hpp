@@ -283,8 +283,8 @@ namespace ft
 				iterator insert(iterator position, const value_type& val)
 				{
 					insert(position, (std::size_t)1, val);
-					
-					if (position == begin() || position == end())
+
+					if (position == begin() || position == end() || position.getPtr() == nullptr)
 						return (position);
 					else
 						return (iterator(position.getPtr()->prev));
@@ -413,6 +413,7 @@ namespace ft
 						--this->length;
 						++ite;
 					}
+					std::cout << "left " << *ite << std::endl;
 
 					if (left_node)
 						left_node->next = right_node;
@@ -426,7 +427,6 @@ namespace ft
 
 					if (last == end())
 						this->tail = left_node;
-
 					if (this->length == 0)
 					{
 						this->head = nullptr;
@@ -438,22 +438,18 @@ namespace ft
 
 				void	swap (List& x)
 				{
-					std::swap(this->head, x->head);
-					std::swap(this->tail, x->tail);
-					std::swap(this->length, x->length);
+					std::swap(this->head, x.head);
+					std::swap(this->tail, x.tail);
+					std::swap(this->length, x.length);
+					std::swap(this->end_, x.end_);
 				}
 
 				void	resize (size_type n, value_type val = value_type())
 				{
-					if (n < this->length)
-					{
-						iterator iter = begin();
-						for (unsigned int i = 0; i < n; ++i)
-							++iter;
-						erase(iter, end());
-					}
-					else if (n > this->length)
-						insert(end(), n - this->length, val);
+					while (this->length > n)
+						this->pop_back();
+					while (this->length < n)
+						this->push_back(val);
 				}
 
 				void 	clear()
@@ -501,6 +497,8 @@ namespace ft
 				void	splice (iterator position, List& x, iterator first, iterator last)
 				{
 					insert(position, first, last);
+					for (iterator iter = x.begin(); iter != x.end(); ++iter)
+						std::cout << ' ' << *iter;
 					x.erase(first, last);
 				}
 

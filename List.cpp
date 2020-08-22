@@ -110,18 +110,113 @@ int main()
 
 	std::cout << "========= assign ==========" << std::endl;
 
+	ft::List<int> first;
+	ft::List<int> second;
+	first.assign((unsigned int)7, 10);
+	second.assign(first.begin(), first.end());
+	int myints[] = {1776, 7, 4};
+  	first.assign (myints, myints + 3);
+
+	std::cout << "Size of first: " << first.size() << std::endl;
+	std::cout << "Size of second: " << second.size() << std::endl;
+
+	std::cout << "========= swap ==========" << std::endl;
+	
+	ft::List<int> a ((unsigned int)3,100);   // three ints with a value of 100
+	ft::List<int> b ((unsigned int)5,200);  // five ints with a value of 200
+
+	a.swap(b);
+
+	std::cout << "first contains:";
+
+	for (ft::List<int>::iterator it=a.begin(); it!=a.end(); it++)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "second contains:";
+	for (ft::List<int>::iterator it=b.begin(); it!=b.end(); it++)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "========= resize ==========" << std::endl;
+
 	ft::List<int> my_list5;
-	my_list5.assign(my_list1.begin(), my_list1.end());
+	for (int i = 1; i < 10; ++i)
+		my_list5.push_back(i);
 
-	// std::list<int> first;
-	// std::list<int> second;
-	// first.assign(7, 10);
-	// second.assign(first.begin(), first.end());
-	// int myints[] = {1776, 7, 4};
-  	// first.assign (myints, myints + 3);
+	i = 0;
+	for (ft::List<int>::iterator it=my_list5.begin(); it!=my_list5.end(); ++it)
+    	std::cout << ' ' << *it;	
+	std::cout << '\n';
 
-	// std::cout << "Size of first: " << first.size() << std::endl;
-	// std::cout << "Size of second: " << second.size() << std::endl;
+	my_list5.resize(5);
+	for (ft::List<int>::iterator it=my_list5.begin(); it!=my_list5.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	my_list5.resize(8,100);
+
+	for (ft::List<int>::iterator it=my_list5.begin(); it!=my_list5.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+
+
+	my_list5.resize(12);
+	for (ft::List<int>::iterator it=my_list5.begin(); it!=my_list5.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "========= splice ==========" << std::endl;
+
+	ft::List<int> mylist1, mylist2;
+	ft::List<int>::iterator it;
+
+	// set some initial values:
+	for (int i=1; i<=4; ++i)
+		mylist1.push_back(i);      // mylist1: 1 2 3 4
+
+	for (int i=1; i<=3; ++i)
+		mylist2.push_back(i*10);   // mylist2: 10 20 30
+
+	it = mylist1.begin();
+	++it;                         // points to 2
+
+	mylist1.splice (it, mylist2); // mylist1: 1 10 20 30 2 3 4
+									// mylist2 (empty)
+									// "it" still points to 2 (the 5th element)
+	std::cout << "mylist1 contains:";
+	for (ft::List<int>::iterator iter = mylist1.begin(); iter != mylist1.end(); ++iter)
+		std::cout << ' ' << *iter;
+	std::cout << '\n';										
+	
+	std::cout << *it << std::endl;
+	
+	mylist2.splice(mylist2.begin(), mylist1, it);
+									// mylist1: 1 10 20 30 3 4
+									// mylist2: 2
+	
+	std::cout << "mylist1 contains:";
+	for (ft::List<int>::iterator iter = mylist1.begin(); iter != mylist1.end(); ++iter)
+		std::cout << ' ' << *iter;
+
+	std::cout << '\n';
+	std::cout << "mylist2 contains:";
+	for (ft::List<int>::iterator iter = mylist2.begin(); iter != mylist2.end(); ++iter)
+		std::cout << ' ' << *iter;
+	std::cout << '\n';
+	
+	it = mylist1.begin();
+	for (int i = 0; i < 3; ++i)
+		++it; //it is pointing 30.
+
+	mylist1.splice(mylist1.begin(), mylist1, it, mylist1.end());
+									// mylist1: 30 3 4 1 10 20
+	std::cout << "mylist1 contains:";
+	for (ft::List<int>::iterator iter = mylist1.begin(); iter != mylist1.end(); ++iter)
+		std::cout << ' ' << *iter;
+	std::cout << '\n';
+
+	std::cout << "========= remove ==========" << std::endl;
 
 	return (0);
 }
