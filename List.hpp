@@ -1,10 +1,8 @@
 #ifndef LIST_HPP
 # define LIST_HPP
 # include <memory>
-# include <cstddef>
 # include <limits>
 # include "Iterator.hpp"
-# include <iostream>
 
 namespace ft
 {
