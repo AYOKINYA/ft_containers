@@ -16,6 +16,10 @@ namespace ft
 		T			data;
 	};
 
+	/*
+	**	Iterator class for ft::List<T>
+	*/
+
 	template <typename T, typename Category = bidirectional_iterator_tag>
 	class IteratorList
 	{
@@ -101,7 +105,7 @@ namespace ft
 				}
 	};
 
-	template <typename T, typename Alloc = std::allocator<T>>
+	template <typename T, typename Alloc = std::allocator<T> >
 	class List
 	{
 		private:
@@ -194,6 +198,10 @@ namespace ft
 					return (*this);
 				}
 
+				/*
+				**	iterators
+				*/
+
 				iterator 		begin(void)
 				{
 					return (iterator(this->head));
@@ -234,6 +242,10 @@ namespace ft
 					return (const_reverse_iterator(begin()));
 				}
 
+				/*
+				**	capacity
+				*/
+
 				bool	empty() const
 				{
 					return (this->length == 0);
@@ -248,6 +260,10 @@ namespace ft
 				{
 					return (std::numeric_limits<size_type>::max() / sizeof(this->head));
 				}
+				
+				/*
+				**	element access
+				*/
 				
 				reference			front(void)
 				{
@@ -268,6 +284,10 @@ namespace ft
 				{
 					return (this->tail->data);
 				}
+
+				/*
+				**	modifiers
+				*/
 
 				template <typename InputIt>
 				void assign(InputIt first, InputIt last)
@@ -481,6 +501,10 @@ namespace ft
 					--iter;
 					erase(iter);
 				}
+
+				/*
+				**	operations
+				*/
 
 				void	splice (iterator position, List& x)
 				{
@@ -713,6 +737,10 @@ namespace ft
 				friend class ListItertor;
 	};
 
+	/*
+	**	non-member function overloads
+	*/
+
 	template <class T, class Alloc>
 	bool operator== (const List<T, Alloc>& lhs, const List<T, Alloc>& rhs)
 	{
@@ -759,7 +787,6 @@ namespace ft
 			++l_iter;
 			++r_iter;
 		}
-		
 
 		return (lhs.size() < rhs.size());
 	}
