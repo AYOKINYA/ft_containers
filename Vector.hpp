@@ -174,6 +174,339 @@ namespace ft
 	// 	return (lhs.getPtr() - rhs.getPtr());
 	// }
 
+	template <typename T, typename Alloc = std::allocator<T> >
+	class Vector
+	{
+		private:
+				T				*arr_;
+				size_type		len_;
+				size_type		capa_;
+				allocator_type	alloc_;
+		public:
+				typedef T 								value_type;
+				typedef Alloc							allocator_type;
+				typedef size_t							size_type;
+				typedef std::ptrdiff_t					difference_type;
+				typedef typename Alloc::reference		reference;
+				typedef typename Alloc::const_reference	const_reference;
+				typedef typename Alloc::pointer			pointer;
+				typedef typename Alloc::const_pointer	const_pointer;
+				typedef IteratorVector<T> 				iterator;
+				typedef IteratorVector<const T>			const_iterator;
+				typedef ReverseIterator<iterator>		reverse_iterator;
+				typedef ReverseIterator<const iterator>	const_reverse_iterator;
+
+				explicit Vector(const allocator_type& alloc = allocator_type()) : arr_(nullptr), len_(0), capa_(0), alloc_(alloc)
+				{}
+				explicit Vector(size_type n, const value_type&val = value_type(), const allocator_type& alloc = allocator_type())
+					: arr_(nullptr), len_(0), capa_(0), alloc_(alloc)
+				{
+					insert(begin(), n, val);
+				}
+
+				template <class InputIterator>
+         		Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+					: arr_(nullptr), len_(0), capa_(0), alloc_(alloc)
+				{
+					insert(begin(), first, last);
+				}
+
+				Vector(const Vector<T>& copy) : arr_(nullptr), len_(0), capa_(0) 
+				{
+					*this = copy;
+				}
+
+				~Vector()
+				{
+					for (unsigned int i = 0; i < len_; ++i)
+						alloc_.destroy(&arr_[i]);
+					alloc_.destroy(arr_, capa_);
+				};
+
+				Vector<T>& operator=(const Vector<T> &vector)
+				{
+					if (this == &vector)
+						return (*this);
+
+					clear();
+
+					insert(begin(), vector.begin(), vector.end());
+					this.alloc_ = vector.alloc_;
+
+					return (*this);
+				}
+
+				/*
+				**	iterators
+				*/
+
+				iterator 		begin(void)
+				{
+					return (iterator(arr_));
+				}
+
+				const_iterator	begin(void) const
+				{
+					return (const_iterator(arr_));
+				}
+
+				iterator 		end(void)
+				{
+					return (iterator(arr_ + len_));
+				}
+
+				const_iterator	end(void) const
+				{
+					return (const_iterator(arr_ + len_));
+				}
+
+				reverse_iterator 		rbegin(void)
+				{
+					return (reverse_iterator(end()));
+				}
+
+				const_reverse_iterator	rbegin(void) const
+				{
+					return (const_reverse_iterator(end()));
+				}
+
+				reverse_iterator 		rend(void)
+				{
+					return (reverse_iterator(begin()));			
+				}
+
+				const_reverse_iterator	rend(void) const
+				{
+					return (const_reverse_iterator(begin()));
+				}
+
+				/*
+				**	capacity
+				*/
+
+				size_type	size() const
+				{
+					return (this->len_);
+				}
+
+				size_type	max_size() const
+				{
+					return (std::numeric_limits<size_type>::max() / sizeof(value_type));
+				}
+				
+				void		resize (size_type n, value_type val = value_type())
+				{
+					if (n < this->len_)
+						erase(begin() + n, end())
+					else
+						insert(end(), count - this->len_, end());
+				}
+
+				size_type	capacity() const
+				{
+					return (this->capa_);
+				}
+				
+				bool		empty() const
+				{
+					return (this->len_ == 0);
+				}
+
+				void		reserve (size_type n)
+				{
+					if (n > max_size())
+						throw std::length_error("ft::vector : You can't reserve this much!");
+					if (n > this->capa_)
+					{
+						T	*new_arr_ = alloc_.allocate(n);
+
+						for (unsigned int i = 0; i < len_; ++i)
+							alloc_.construct(&new_arr_[i], arr_[i]);
+						alloc_.deallocate(arr_, capa_);
+						
+						arr_ = new_arr_;
+						capa_ = n;
+					}
+				}
+
+				/*
+				**	Element access
+				*/
+
+				reference operator[] (size_type n)
+				{
+					return (arr_[n]);
+				}
+				const_reference operator[] (size_type n) const
+				{
+					return (arr_[n]);
+				}
+
+				reference at (size_type n)
+				{
+					if (n >= len_)
+						throw std::out_of_range("ft::vector : The index is out of range!");
+					return (arr_[n]);
+				}
+				const_reference at (size_type n) const
+				{
+					if (n >= len_)
+						throw std::out_of_range("ft::vector : The index is out of range!");
+					return (arr_[n]);
+				}
+				reference			front(void)
+				{
+					return (arr_[0]);
+				}
+
+				const_reference		front(void) const
+				{
+					return (arr_[0]);
+				}
+
+				reference			back(void)
+				{
+					return (arr_[len_ - 1]);
+				}
+
+				const_reference		back(void) const
+				{
+					return (arr_[len_ - 1]);
+				}
+
+				/*
+				**	modifiers
+				*/
+
+				template <typename InputIt>
+				void assign(InputIt first, InputIt last)
+				{
+					clear();
+					insert(begin(), first, last);
+				}
+				void assign(size_type n, const value_type& val)
+				{
+					clear();
+					insert(begin(), n, val);
+				}
+
+				void push_back (const value_type& val)
+				{
+					insert(end(), val);
+				}
+
+				void pop_back (const value_type& val)
+				{
+					erase(end() - 1);
+				}
+
+				iterator insert(iterator position, const value_type& val)
+				{
+					insert(position, (std::size_t)1, val);
+					return (position);
+				}
+
+				void insert(iterator position, size_type n, const value_type& val)
+				{
+					if (len_ + n + 1 > capa_)
+						reserve(len_ + n + 1);
+
+					iterator 	iter = position;
+					iterator 	end = this->end();
+					int			idx = len_;
+
+					while (iter != end)
+					{
+						arr_[idx + n] = arr_[idx + n - 1];
+						--idx;
+						++iter;
+					}
+					for (unsigned int i = 0; i < n; ++i)
+						arr_[position + i] = val;
+					
+					this->length += n;
+					return (iterator(&arr_[position]));
+				}
+
+				template <class InputIterator>
+				void insert (iterator position, InputIterator first, InputIterator last)
+				{
+					int n = 0;
+					InputIterator save = first;
+		
+					while (first != last)
+					{
+						++n;
+						++first;
+					}
+
+					first = save;
+					if (len_ + n + 1 > capa_)
+						reserve(len_ + n + 1);
+
+					iterator 	iter = position;
+					iterator 	end = this->end();
+					int			idx = len_;
+
+					while (iter != end)
+					{
+						arr_[idx + n] = arr_[idx + n - 1];
+						--idx;
+						++iter;
+					}
+					for (unsigned int i = 0; i < n; ++i)
+						arr_[position + i] = *first++;
+					
+					this->length += n;
+					return (iterator(&arr_[position]));
+				}
+
+				iterator erase (iterator position)
+				{
+					erase(position, position + 1);
+				}
+
+				iterator erase (iterator first, iterator last)
+				{
+					if (len_ <= 0)
+						return first;
+
+					
+					iterator 	end = this->end();
+					int			idx = len_;
+
+					iterator	iter = first;
+					iterator	save_last = last;
+					while (last != end)
+					{
+						*iter = *last;
+						++last;
+						++iter;
+					}
+					last = save_last;
+					iter = first;
+					while (iter != last)
+					{
+						iter++;
+						--this->length;
+					}
+
+					return (first);
+				}
+				void swap(Vector<T>& other)
+				{
+					std::swap(arr_, other.arr_);
+					std::swap(len_, other.len_);
+					std::swap(capa_, other.cap_);
+					std::swap(alloc_, other.alloc_);
+				}
+
+				void clear()
+				{
+					erase(begin(), end());
+				}
+	};
+
 };
 
 
