@@ -4,6 +4,99 @@
 
 namespace ft
 {
+	template <class Arg1, class Arg2, class Result>
+	struct binary_function
+	{
+		typedef Arg1	first_argument_type;
+		typedef Arg2	second_argument_type;
+		typedef Result	result_type;
+	};
+	
+	template <class T>
+	struct less : binary_function < T , T , bool>
+	{
+  		bool operator() (const T& x, const T& y) const 
+		{
+			return (x < y);
+		}
+	};
+
+	template <class T1, class T2>
+	struct pair
+	{
+		typedef T1 first_type;
+		typedef T2 second_type;
+
+		T1 first;
+		T2 second;
+
+		pair() {};
+		template <class U, class V>
+		pair (const pair<U, V> &pr) : first(pr.first), second(pr.second) {};
+		pair (const first_type& a, const second_type& b) : first(a), secon(b) {};
+		pair<T1, T2>& operator= (const pair<T1, T2>& pr)
+		{
+			if (this == &pr)
+				return (*this);
+			this->first = pr.first;
+			this->second = pr.second;
+			return (*this);
+		}
+		template <typename U, typename V>
+		pair<T1, T2>& operator= (const pair<U, V>& pr)
+		{
+			if (this == &pr)
+				return (*this);
+			this->first = pr.first;
+			this->second = pr.second;
+			return (*this);
+		}
+	};
+
+	template <class T1, class T2>
+	pair<T1, T2> make_pair(T1 x, T2 y)
+	{
+		return (pair<T1, T2>(x, y));
+	}
+
+	template <class T1, class T2>
+  	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
+	}
+
+	template <class T1, class T2>
+	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{ 
+		return !(lhs==rhs);
+	}
+
+	template <class T1, class T2>
+	bool operator<  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
+	}
+
+	template <class T1, class T2>
+	bool operator<= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return !(rhs < lhs);
+	}
+
+	template <class T1, class T2>
+	bool operator>  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return rhs < lhs;
+	}
+
+	template <class T1, class T2>
+	bool operator>= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return !(lhs < rhs);
+	}
+
+	// 윗부분은 그냥 std::에서 불러와서 쓰면 되지만 공부할 겸 만들었다.
+
 	struct input_iterator_tag {};
 	struct output_iterator_tag {};
 	struct forward_iterator_tag : public input_iterator_tag {};

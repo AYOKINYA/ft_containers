@@ -125,7 +125,7 @@ namespace ft
 				typedef IteratorList<T> 				iterator;
 				typedef IteratorList<const T>			const_iterator;
 				typedef ReverseIterator<iterator>		reverse_iterator;
-				typedef ReverseIterator<const iterator>	const_reverse_iterator;
+				typedef ReverseIterator<const_iterator>	const_reverse_iterator;
 
 
 				explicit List()

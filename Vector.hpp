@@ -3,7 +3,6 @@
 # include "Iterator.hpp"
 # include <memory>
 # include <limits>
-# include <iostream>
 
 namespace ft
 {
@@ -195,7 +194,7 @@ namespace ft
 				typedef IteratorVector<T> 				iterator;
 				typedef IteratorVector<const T>			const_iterator;
 				typedef ReverseIterator<iterator>		reverse_iterator;
-				typedef ReverseIterator<const iterator>	const_reverse_iterator;
+				typedef ReverseIterator<const_iterator>	const_reverse_iterator;
 
 				explicit Vector(const allocator_type& alloc = allocator_type()) : arr_(nullptr), len_(0), capa_(0), alloc_(alloc)
 				{}
