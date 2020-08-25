@@ -3,6 +3,7 @@
 # include "Iterator.hpp"
 # include <memory>
 # include <limits>
+# include <iostream>
 
 namespace ft
 {
@@ -109,7 +110,7 @@ namespace ft
 					return (*(this->ptr_ + n));
 				}
 
-				T	*getptr_(void)
+				T	*getPtr(void) const
 				{
 					return (this->ptr_);
 				}
@@ -298,7 +299,7 @@ namespace ft
 					if (n < this->len_)
 						erase(begin() + n, end());
 					else
-						insert(end(), n - this->len_, end(), val);
+						insert(end(), n - this->len_, val);
 				}
 
 				size_type	capacity() const
@@ -409,24 +410,27 @@ namespace ft
 				{
 					if (n == 0)
 						return ;
-					if (len_ + n + 1 > capa_)
-						reserve(len_ + n + 1);
-
 					iterator 	iter = position;
 					iterator 	end = this->end();
 					int			idx = len_;
-
+					
+					if (len_ + n + 1 > capa_)
+						reserve(len_ + n + 1);
+					
 					while (iter != end)
-					{
+					{	
 						arr_[idx + n] = arr_[idx + n - 1];
 						--idx;
 						++iter;
 					}
+
 					for (unsigned int i = 0; i < n; ++i)
-						*(position + i) = val;
-					
+					{
+						arr_[idx + n - 1] = val;
+						--idx;
+					}
+
 					this->len_ += n;
-					return (iterator(&arr_[position]));
 				}
 
 				template <class InputIterator>
@@ -445,12 +449,12 @@ namespace ft
 						return ;
 
 					first = save;
-					if (len_ + n + 1 > capa_)
-						reserve(len_ + n + 1);
-
 					iterator 	iter = position;
 					iterator 	end = this->end();
 					int			idx = len_;
+
+					if (len_ + n + 1 > capa_)
+						reserve(len_ + n + 1);
 
 					while (iter != end)
 					{
@@ -458,16 +462,20 @@ namespace ft
 						--idx;
 						++iter;
 					}
-					for (int i = 0; i < n; ++i)
-						*(position + i) = *first++;
+
+					while (last-- != first)
+					{
+						arr_[idx + n - 1] = *last;
+						--idx;
+					}
 					
 					this->len_ += n;
-					return (iterator(position - n));
 				}
 
 				iterator erase (iterator position)
 				{
 					erase(position, position + 1);
+					return (position);
 				}
 
 				iterator erase (iterator first, iterator last)
@@ -499,7 +507,7 @@ namespace ft
 				{
 					std::swap(arr_, other.arr_);
 					std::swap(len_, other.len_);
-					std::swap(capa_, other.cap_);
+					std::swap(capa_, other.capa_);
 					std::swap(alloc_, other.alloc_);
 				}
 
