@@ -33,7 +33,7 @@ namespace ft
 		pair() {};
 		template <class U, class V>
 		pair (const pair<U, V> &pr) : first(pr.first), second(pr.second) {};
-		pair (const first_type& a, const second_type& b) : first(a), secon(b) {};
+		pair (const first_type& a, const second_type& b) : first(a), second(b) {};
 		pair<T1, T2>& operator= (const pair<T1, T2>& pr)
 		{
 			if (this == &pr)
@@ -45,8 +45,8 @@ namespace ft
 		template <typename U, typename V>
 		pair<T1, T2>& operator= (const pair<U, V>& pr)
 		{
-			if (this == &pr)
-				return (*this);
+			// if (this == &pr)
+			// 	return (*this);
 			this->first = pr.first;
 			this->second = pr.second;
 			return (*this);
