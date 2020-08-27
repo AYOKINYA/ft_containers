@@ -27,11 +27,6 @@ int main ()
 	std::cout << first['c'] << '\n';
 	std::cout << first['d'] << '\n';
 
-	for (ft::Map<char,int>::iterator it=first.begin(); it!=first.end(); ++it)
-    	std::cout << it->first << " => " << it->second << '\n';
-	std::cout << first.rbegin()->data << std::endl;
-	// for (ft::Map<char,int>::reverse_iterator it=first.rbegin(); it!=first.rend(); ++it)
-    // 	std::cout << it->first << " => " << it->second << '\n';
 
 	std::cout << "====================\n";
 
@@ -55,6 +50,21 @@ int main ()
 
 	bool(*fn_pt)(char,char) = fncomp;
 	ft::Map<char,int,bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
+
+	std::cout << "=========Iterators=========\n";
+
+	ft::Map<char,int> mymap;
+
+	mymap['x'] = 100;
+	mymap['y'] = 200;
+	mymap['z'] = 300;
+
+	std::cout << "print with Itreators :\n";
+	for (ft::Map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    	std::cout << it->first << " => " << it->second << '\n';
+	std::cout << "print with ReverseItreators :\n";
+	for (ft::Map<char,int>::reverse_iterator rit = mymap.rbegin() ; rit != mymap.rend() ; ++rit)
+		std::cout << rit->first << " => " << rit->second << '\n';
 
 	return 0;
 }

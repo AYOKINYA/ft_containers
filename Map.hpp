@@ -16,7 +16,7 @@ namespace ft
 				typedef	T										mapped_type;
 				typedef pair<const key_type, mapped_type>		value_type;
 				typedef Compare									key_compare;
-				//value_compare??
+				//value_compare is down below as a class
 				typedef Alloc									allocator_type;
 				typedef typename Alloc::reference				reference;
 				typedef typename Alloc::const_reference			const_reference;
@@ -24,8 +24,8 @@ namespace ft
 				typedef typename Alloc::const_pointer			const_pointer;
 				typedef AVLtreeIterator<Key, T> 				iterator;
 				typedef AVLtreeIterator<const Key, const T>		const_iterator;
-				typedef ReverseIterator<iterator>				reverse_iterator;
-				typedef ReverseIterator<const_iterator>			const_reverse_iterator;
+				typedef AVLtreeRIterator<Key, T>				reverse_iterator;
+				typedef AVLtreeRIterator<const Key, const T>	const_reverse_iterator;
 				typedef size_t									size_type;
 				typedef std::ptrdiff_t							difference_type;
 
@@ -136,10 +136,14 @@ namespace ft
 						//return (n);
 					}
 					else if (data.first < n->data.first)
+					{
 						n->left = insert_node(n->left, data);
+						n->left->parent = n;
+					}
 					else if (data.first > n->data.first)
 					{
 						n->right = insert_node(n->right, data);
+						n->right->parent = n;
 					}
 					else
 						throw std::range_error("Duplicate!");
@@ -302,23 +306,29 @@ namespace ft
 				}
 
 				reverse_iterator rbegin()
-				{
-					return (reverse_iterator(end()));
+				{					
+					node *ret = this->root_;
+					while (ret && ret->right)
+						ret = ret->right;
+					return (reverse_iterator(this->root_, ret));
 				}
 
 				const_reverse_iterator rbegin() const
 				{
-					return (const_reverse_iterator(end()));
+					node *ret = this->root_;
+					while (ret && ret->right)
+						ret = ret->right;
+					return (const_reverse_iterator(this->root_, ret));
 				}
 
 				reverse_iterator rend()
 				{
-					return (reverse_iterator(begin()));
+					return (reverse_iterator(this->root_, NULL));
 				}
 
 				const_reverse_iterator rend() const
 				{
-					return (const_reverse_iterator(begin()));
+					return (const_reverse_iterator(this->root_, NULL));
 				}
 				/*
 				** capacity

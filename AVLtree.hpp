@@ -138,6 +138,131 @@ namespace ft
 				}
 	};
 
+	template <typename Key, typename T>
+	class AVLtreeRIterator
+	{
+		private:
+				typedef AVLtreeNode<Key, T>	treenode;
+				treenode*					tree_root_;
+				treenode*					node_;
+
+		public:
+				
+				typedef T							value_type;
+				typedef T*							pointer;
+				typedef T&							reference;
+				typedef std::ptrdiff_t 				difference_type;
+				typedef bidirectional_iterator_tag	iterator_category;
+				
+				AVLtreeRIterator() : tree_root_(nullptr), node_(nullptr) {};
+		
+				AVLtreeRIterator(treenode* tree_root_, treenode *n) : tree_root_(tree_root_), node_(n) {};
+
+				AVLtreeRIterator(const AVLtreeRIterator<Key, T> & copy)
+				 : tree_root_(copy.tree_root_), node_(copy.node_)
+				{}
+
+				~AVLtreeRIterator() {};
+				AVLtreeRIterator<Key, T>& operator=(const AVLtreeRIterator<Key, T> & rhs)
+				{
+					if (this == &rhs)
+						return (*this);
+					this->node_ = rhs.node_;
+					return (*this);
+				}
+
+				AVLtreeRIterator<Key, T>& operator--()
+				{
+					if (!node_)
+						return (*this);
+					if (node_->right)
+					{
+						node_ = node_->right;
+						while (node_->left)
+							node_ = node_->left;
+					}
+					else
+					{
+						treenode *tmp;
+						do
+						{
+							tmp = node_;
+							node_ = node_->parent;
+						}
+						while (node_ && tmp == node_->right);
+					}
+
+					return (*this);
+				}
+
+				AVLtreeIterator<Key, T> operator--(int)
+				{
+					AVLtreeIterator<Key, T> tmp(*this);
+					operator--();
+					return (tmp);
+				}
+
+				AVLtreeRIterator<Key, T>& operator++()
+				{
+					if (!node_)
+					{
+						node_ = tree_root_;
+						while (node_ && node_->right)
+							node_ = node_->right;
+					}
+					else if (node_->left)
+					{
+						node_ = node_->left;
+						while (node_->right)
+							node_ = node_->right;
+					}
+					else
+					{	
+						treenode *tmp;
+						
+						do
+						{
+							tmp = node_;
+							node_ = node_->parent;
+						}
+						while (node_ && tmp == node_->left);
+					}
+					return (*this);
+				}
+
+				AVLtreeIterator<Key, T> operator++(int)
+				{
+					AVLtreeIterator<Key, T> tmp(*this);
+					operator++();
+					return (tmp);
+				}
+
+				bool	operator==(const AVLtreeRIterator<Key, T> &rhs) const
+				{
+					return (this->node_ == rhs.node_);
+				}
+
+				bool	operator!=(const AVLtreeRIterator<Key, T> &rhs) const
+				{
+					return (this->node_ != rhs.node_);
+				}
+
+				pair<Key, T>& operator*(void)
+				{
+					return (this->node_->data);
+				}
+
+				pair<Key, T>* operator->(void)
+				{
+					return (&(this->node_->data));
+				}
+
+				treenode	*getPtr(void)
+				{
+					return (this->node_);
+				}
+	};
+
 };
 
 #endif
