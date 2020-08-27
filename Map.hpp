@@ -66,7 +66,10 @@ namespace ft
 				//모든 노드는 회전을 수행한 이후에 높이 다시 계산한다.
 				void setHeight(node *n)
 				{
-					n->height = getMax(n->left->height, n->right->height) + 1;
+					int l_height = n->left ? n->left->height : 0;
+					int r_height = n->right ? n->right->height : 0;
+					
+					n->height = getMax(l_height, r_height) + 1;
 				}
 
 				node*	rotateLL(node *n) // right rotate
@@ -79,7 +82,8 @@ namespace ft
 					tmp->right = n;
 					tmp->parent = tmp_parent;
 					n->parent = tmp;
-					n->left->parent = n;
+					if (n->left)
+						n->left->parent = n;
 					setHeight(n);
 					setHeight(tmp);
 					return (tmp);
@@ -95,7 +99,9 @@ namespace ft
 					tmp->left = n;
 					tmp->parent = tmp_parent;
 					n->parent = tmp;
-					n->right->parent = n;
+					if (n->right)
+						n->right->parent = n;
+
 					setHeight(n);
 					setHeight(tmp);
 					return (tmp);
@@ -110,7 +116,7 @@ namespace ft
 
 				node*	rotateRL(node *n) //right rotate & left rotate
 				{
-					node *tmp = n->right;
+					node *tmp = n->right;				
 					n->right = rotateLL(tmp);
 					return (rotateRR(n));
 				}
@@ -125,26 +131,31 @@ namespace ft
 						n->right = nullptr;
 						n->left = nullptr;
 						n->height = 1;
+						if (!this->root_)
+							this->root_ = n;
+						//return (n);
 					}
 					else if (data.first < n->data.first)
 						n->left = insert_node(n->left, data);
 					else if (data.first > n->data.first)
+					{
 						n->right = insert_node(n->right, data);
+					}
 					else
 						throw std::range_error("Duplicate!");
 					
 					setHeight(n);
-
+					
 					//balancing node
 					int bf = balance_factor(n);
 
 					if (bf > 1 && data.first < n->left->data.first)
 						return rotateLL(n);
-					if (bf < -1 && data.first < n->right->data.first)
+					if (bf < -1 && data.first > n->right->data.first)
 						return rotateRR(n);
 					if (bf > 1 && data.first > n->left->data.first)
 						return rotateLR(n);
-					if (bf < -1 && data.first > n->right->data.first)
+					if (bf < -1 && data.first < n->right->data.first)
 						return rotateRL(n);
 
 					return (n);
@@ -210,7 +221,7 @@ namespace ft
 					return (n);
 				}
 
-				void free_tree(node* &n)
+				void free_tree(node* n)
 				{
 					if (!n)
 						return ;
@@ -229,34 +240,35 @@ namespace ft
 				/*
 				** constructors
 				*/
-				explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+				explicit Map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 					: alloc_(alloc), cmp_(comp), root_(nullptr), len_(0)
 				{}
 				
 				template <class InputIterator>
-				Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+				Map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 					: alloc_(alloc), cmp_(comp), root_(nullptr), len_(0)
 				{
 					insert(first, last);
 				}
 
-				Map (const Map& x)
+				Map(const Map &x) : alloc_(allocator_type()), cmp_(key_compare()), root_(nullptr), len_(0)
 				{
 					*this = x;
 				}
 
 				~Map()
 				{
-					
+					clear();
 				}
 
 				Map& operator=(const Map &map)
 				{
 					this->clear();
 
-					this->cmp_ = map.cmp_;
 					this->alloc_ = map.alloc_;
-					this->insert(map.begin(), map.end());
+					this->cmp_ = map.cmp_;
+					this->root_ = map.root_;
+					this->len_ = map.len_;
 
 					return (*this);
 				}
@@ -330,34 +342,21 @@ namespace ft
 				*/
 				mapped_type& operator[] (const key_type& k)
 				{
-					node *n;
+					iterator iter = find(k);
+					if (iter != end())
+						return (iter->second);
+					pair<iterator, bool> res = insert(make_pair(k, mapped_type()));
+					
+					return ((res.first)->second);
 
-					n = this->root_;
-					while (n)
-					{
-						if (k == n->data.first)
-							return (n->data.second);
-						if (cmp_(k, n->data.first))
-						{
-							if (n->left)
-								n = n->left;
-							else
-								insert(iterator(this->root_, n), value_type(k, 0));
-						}
-						else
-						{
-							if (n->right)
-								n = n->right;
-							else
-								insert(iterator(this->root_, n), value_type(k, 0));
-						}
-					}
-					insert(value_type(k, 0));
-					return (root_->data.second);
 				}
 				pair<iterator,bool> insert(const value_type& val)
 				{
 					node *n = insert_node(root_, val);
+					n = find(val.first).getPtr();
+					// std::cout << val.first << std::endl;
+					// std::cout << "1st " << n->data.first << std::endl;
+					// std::cout << "2nd " << n->data.second << std::endl;
 					++this->len_;
 					return (make_pair(iterator(this->root_, n), true));
 				}
@@ -366,6 +365,7 @@ namespace ft
 				{
 					node *hint = position.getPtr();
 					node *n = insert_node(hint, val);
+					n = find(val.first).getPtr();
 					++this->len_;
 					return (iterator(this->root_, n));
 				}
@@ -434,6 +434,7 @@ namespace ft
 				void clear()
 				{
 					free_tree(root_);
+					this->len_ = 0;
 				}
 				/*
 				** observers
@@ -464,6 +465,7 @@ namespace ft
 						else
 							n = n->right;
 					}
+					
 					return (this->end());
 				}
 				const_iterator find (const key_type& k) const

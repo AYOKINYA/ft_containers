@@ -20,19 +20,19 @@ namespace ft
 	{
 		protected:
 				typedef AVLtreeNode<Key, T> treenode;
-				treenode &tree_root_;
+				treenode *tree_root_;
 				treenode *node_;
 
 		public:
 				typedef T							value_type;
 				typedef T*							pointer;
 				typedef T&							reference;
-				typedef std::ptrdiff_t 			difference_type;
+				typedef std::ptrdiff_t 				difference_type;
 				typedef bidirectional_iterator_tag	iterator_category;
 				
 				AVLtreeIterator() : tree_root_(nullptr), node_(nullptr) {};
-				AVLtreeIterator(treenode& tree_root_, treenode *n) : tree_root_(tree_root_), node_(n) {};
-				AVLtreeIterator(treenode* tree_root_, treenode *n) : tree_root_(*tree_root_), node_(n) {};
+		
+				AVLtreeIterator(treenode* tree_root_, treenode *n) : tree_root_(tree_root_), node_(n) {};
 
 				AVLtreeIterator(const AVLtreeIterator<Key, T> & copy)
 				 : tree_root_(copy.tree_root_), node_(copy.node_)
@@ -122,12 +122,12 @@ namespace ft
 					return (this->node_ != rhs.node_);
 				}
 
-				T& operator*(void)
+				pair<Key, T>& operator*(void)
 				{
 					return (this->node_->data);
 				}
 
-				T* operator->(void)
+				pair<Key, T>* operator->(void)
 				{
 					return (&(this->node_->data));
 				}
@@ -137,6 +137,7 @@ namespace ft
 					return (this->node_);
 				}
 	};
+
 };
 
 #endif
