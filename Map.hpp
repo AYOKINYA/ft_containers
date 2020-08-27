@@ -135,12 +135,12 @@ namespace ft
 							this->root_ = n;
 						//return (n);
 					}
-					else if (data.first < n->data.first)
+					else if (cmp_(data.first, n->data.first))//(data.first < n->data.first)
 					{
 						n->left = insert_node(n->left, data);
 						n->left->parent = n;
 					}
-					else if (data.first > n->data.first)
+					else if (cmp_(n->data.first, data.first))
 					{
 						n->right = insert_node(n->right, data);
 						n->right->parent = n;
@@ -180,31 +180,35 @@ namespace ft
 				{
 					if (n == nullptr)
 						return (n);
-					if (data < n->data)
+					if (data.first < n->data.first)
 						n->left = delete_node(n->left, data);
-					else if (data > n->data)
+					else if (data.first > n->data.first)
 						n->right = delete_node(n->right, data);
 					else
 					{
 						if (n->left == nullptr || n->right == nullptr)
 						{
 							node *tmp = nullptr;
-							if (tmp == n->left)
-								tmp = n->right;
-							else
-								tmp = n->left;
+							tmp = n->left ? n->left : n->right;
 							
-							// no child case
+							// no child case n->left == nullptr && n->right == nullptr
 							if (tmp == NULL)
 							{
+								//std::cout << n->data.first  << std::endl;
 								tmp = n;
 								n = nullptr;
+								delete (tmp);
 							}
-							else
+							else // one child case
+							{
+								node *temp = n;
 								n = tmp;
+								tmp->parent = temp->parent;
+								delete (temp);
+							}
 						}
 						else
-						{
+						{	// node with two children;
 							node *tmp = minValueNode(n->right);
 							n->data = tmp->data;
 							n->right = delete_node(n->right, tmp->data);
@@ -273,6 +277,7 @@ namespace ft
 					this->cmp_ = map.cmp_;
 					this->root_ = map.root_;
 					this->len_ = map.len_;
+					// insert(map.begin(), map.end());
 
 					return (*this);
 				}
@@ -408,7 +413,7 @@ namespace ft
 					{
 						if (k == n->data.first)
 						{
-							delete_node(root_, n);
+							delete_node(root_, n->data);
 							--this->len_;
 							return (1);
 						}
@@ -428,7 +433,7 @@ namespace ft
 					{
 						next = first;
 						++next;
-						delete_node(root_, first);
+						delete_node(root_, *first);
 						--this->len_;
 						first = next;
 					}

@@ -195,9 +195,9 @@ namespace ft
 					return (*this);
 				}
 
-				AVLtreeIterator<Key, T> operator--(int)
+				AVLtreeRIterator<Key, T> operator--(int)
 				{
-					AVLtreeIterator<Key, T> tmp(*this);
+					AVLtreeRIterator<Key, T> tmp(*this);
 					operator--();
 					return (tmp);
 				}
@@ -230,9 +230,9 @@ namespace ft
 					return (*this);
 				}
 
-				AVLtreeIterator<Key, T> operator++(int)
+				AVLtreeRIterator<Key, T> operator++(int)
 				{
-					AVLtreeIterator<Key, T> tmp(*this);
+					AVLtreeRIterator<Key, T> tmp(*this);
 					operator++();
 					return (tmp);
 				}
@@ -262,6 +262,52 @@ namespace ft
 					return (this->node_);
 				}
 	};
+
+	template <typename Key, typename T>
+ 	bool operator== (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr() == rhs.getPtr());
+	}
+	template <typename Key, typename T>
+	bool operator!= (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr() != rhs.getPtr());
+	}
+	template <typename Key, typename T>
+	bool operator<  (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr()->data.first > rhs.getPtr()->data.first);
+	}
+	template <typename Key, typename T>
+	bool operator<= (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr()->data.first >= rhs.getPtr()->data.first);
+	}
+	template <typename Key, typename T>
+	bool operator>  (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr()->data.first < rhs.getPtr()->data.first);
+	}
+	template <typename Key, typename T>
+	bool operator>= (const AVLtreeRIterator<Key, T>& lhs, const AVLtreeRIterator<Key, T>& rhs)
+	{
+		return (lhs.getPtr()->data.first <= rhs.getPtr()->data.first);
+	}
+	template <typename Key, typename T>
+	AVLtreeRIterator<Key, T> operator+(typename AVLtreeRIterator<Key, T>::difference_type n,
+											const AVLtreeRIterator<Key, T>& rev_it)
+	{
+		AVLtreeRIterator<Key, T> res(rev_it.getPtr() - n);
+		return (res);
+	}
+
+	template <typename Key, typename T>
+	AVLtreeRIterator<Key, T> operator-(typename AVLtreeRIterator<Key, T>::difference_type n,
+											const AVLtreeRIterator<Key, T>& rev_it)
+	{
+		AVLtreeRIterator<Key, T> res(rev_it.getPtr() + n);
+		return (res);
+	}
 
 };
 
