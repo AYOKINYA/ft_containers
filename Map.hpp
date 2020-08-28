@@ -23,10 +23,10 @@ namespace ft
 				typedef typename Alloc::const_reference			const_reference;
 				typedef typename Alloc::pointer					pointer;
 				typedef typename Alloc::const_pointer			const_pointer;
-				typedef AVLtreeIterator<Key, T> 				iterator;
-				typedef AVLtreeIterator<Key, T>		const_iterator;
-				typedef AVLtreeRIterator<Key, T>				reverse_iterator;
-				typedef AVLtreeRIterator<Key, T>	const_reverse_iterator;
+				typedef AVLtreeIterator<const Key, T> 				iterator;
+				typedef AVLtreeIterator<const Key, T>		const_iterator;
+				typedef AVLtreeRIterator<const Key, T>				reverse_iterator;
+				typedef AVLtreeRIterator<const Key, T>	const_reverse_iterator;
 				typedef size_t									size_type;
 				typedef std::ptrdiff_t							difference_type;
 
@@ -49,7 +49,7 @@ namespace ft
 						}
 				};
 
-				typedef AVLtreeNode<Key, T> node;
+				typedef AVLtreeNode<const Key, T> node;
 
 		private:
 				int getMax(int a, int b)
@@ -188,7 +188,7 @@ namespace ft
 							node *tmp = nullptr;
 							tmp = n->left ? n->left : n->right;
 							
-							// no child case n->left == nullptr && n->right == nullptr
+							// no child case : n->left == nullptr && n->right == nullptr
 							if (tmp == NULL)
 							{
 								//std::cout << n->data.first  << std::endl;
@@ -206,12 +206,37 @@ namespace ft
 						}
 						else
 						{	// node with two children;
+							//n->data = tmp->data; 한 줄이면 될 것을.... const Key라서 이 고생을 했다.
 							node *tmp = minValueNode(n->right);
-							n->data = tmp->data;
-							n->right = delete_node(n->right, tmp->data);
+							node *n_new = new node(n->data, nullptr, tmp->right, tmp->left, tmp->height);
+							if (n_new->right)
+								n_new->right->parent = n_new;
+							if (n_new->left)
+								n_new->left->parent = n_new;
+							
+							tmp->height = n->height;
+							tmp->left = n->left;
+							tmp->right = n_new;
+							if (tmp->left)
+								tmp->left->parent = tmp;
+							if (tmp->right)
+								tmp->right->parent = tmp;
+							n_new->parent = tmp;
+							tmp->parent = n->parent;
+							if (tmp->parent && tmp->parent->left && tmp->parent->left->data.first == tmp->data.first)
+								tmp->parent->left = tmp;
+							if (tmp->parent && tmp->parent->right && tmp->parent->right->data.first == tmp->data.first)
+								tmp->parent->right = tmp;
+
+							node *temp = n;
+							n = tmp;
+							delete (temp);
+							
+							n->right = delete_node(n->right, n_new->data);
 						}
 						if (n == nullptr)
 							return n;
+
 						setHeight(n);
 						int bf = balance_factor(n);
 						if (bf > 1 && balance_factor(n->left) >= 0)
@@ -224,16 +249,6 @@ namespace ft
 							return rotateRL(n);
 					}
 					return (n);
-				}
-
-				void free_tree(node* n)
-				{
-					if (!n)
-						return ;
-					free_tree(n->left);
-					free_tree(n->right);
-					delete n;
-					n = nullptr;
 				}
 
 		public:
@@ -452,7 +467,7 @@ namespace ft
 				}
 				void clear()
 				{
-					free_tree(root_);
+					erase(begin(), end());
 					this->len_ = 0;
 				}
 				/*

@@ -80,33 +80,32 @@ int main ()
 	map2['e']=50;
 	map2['f']=60;
 	/*
-	**	   b
+	**	   d
 	**    / \
-	**   a   d
-	**      / \	
-	**	   c	e
-	**			 \
-	**			  f
+	**   b   e
+	**  / \   \	
+	** a   c   f
 	*/
+	
 	ft::Map<char,int>::iterator it;
 	
 	// when no child
 	std::cout << "when no child" << std::endl;
 	ft::Map<char , int> map1;
+
 	map1.insert(map2.begin(), map2.end());
-	map1.erase('c');                  // erasing by key
+    map1.erase('c');                  // erasing by key
 	for (it=map1.begin(); it!=map1.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
 	for (ft::Map<char,int>::reverse_iterator it=map1.rbegin(); it!=map1.rend(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
 
-	// when one child
+	//when one child
 	std::cout << "when one child" << std::endl;
 
 	ft::Map<char , int> map3;
 	map3.insert(map2.begin(), map2.end());
 	map3.erase('e');                    // erasing by key
-
 	for (it=map3.begin(); it!=map3.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
 	for (ft::Map<char,int>::reverse_iterator it=map3.rbegin(); it!=map3.rend(); ++it)
@@ -121,14 +120,15 @@ int main ()
 
 	for (it=map4.begin(); it!=map4.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
-	for (ft::Map<char,int>::reverse_iterator it=map4.rbegin(); it!=map4.rend(); ++it)
+	for (ft::Map<char,int>::reverse_iterator it=map4.rbegin(); it!=map4.rend() ; ++it)
 		std::cout << it->first << " => " << it->second << '\n';
 
 	ft::Map<char , int> map5;
 	map5.insert(map2.begin(), map2.end());
-
 	
 	it = map5.find('b');
+	for (ft::Map<char,int>::iterator iter=map5.begin(); iter!=map5.end(); ++iter)
+		std::cout << iter->first << " => " << iter->second << '\n';
 	map5.erase (it);                   // erasing by iterator
 
 	map5.erase ('c');                  // erasing by key
