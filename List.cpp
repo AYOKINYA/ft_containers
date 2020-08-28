@@ -46,7 +46,8 @@ int main()
 		my_list1.push_back(i);
 
 	my_list1.push_front(0);
-	std::cout << "size : " << my_list1.size() << std::endl;
+	//std::cout << "size : " << my_list1.size() << std::endl;
+	std::cout << "max_size : " << my_list1.max_size() << std::endl;
 	std::cout << "empty? : " << std::boolalpha << my_list1.empty() << std::endl;
 
 	std::cout << "========= List constructor ==========" << std::endl;

@@ -31,6 +31,8 @@ int main ()
 
 	std::cout << std::boolalpha << "Empty? : " << first.empty() << std::endl;
 	std::cout << std::boolalpha << "Size : " << first.size() << std::endl;
+	std::cout << std::boolalpha << "max Size : " << first.max_size() << std::endl;
+
 	std::cout << "====================\n";
 
 	ft::Map<char , int> second (first.begin(),first.end());
