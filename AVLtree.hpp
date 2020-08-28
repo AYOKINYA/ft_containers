@@ -1,6 +1,7 @@
 #ifndef AVLTREE_HPP
 # define AVLTREE_HPP
-# include "Vector.hpp"
+
+# include "Iterator.hpp"
 # include <exception>
 
 namespace ft
@@ -13,6 +14,11 @@ namespace ft
 		AVLtreeNode*	right;
 		AVLtreeNode*	left;
 		int				height;
+		// 결국에는 Key가 Map에서 const이기 때문에 생성 시 초기화를 해야만 한다!
+		// 그래서 멤버 이니셜라이저 리스트 사용
+		AVLtreeNode(pair<Key, T> data, AVLtreeNode* parent, AVLtreeNode* right, AVLtreeNode* left, int height)
+			: data(data), parent(parent), right(right), left(left), height(height)
+		{}
 	};
 
 	template <typename Key, typename T>
@@ -24,9 +30,9 @@ namespace ft
 				treenode *node_;
 
 		public:
-				typedef T							value_type;
-				typedef T*							pointer;
-				typedef T&							reference;
+				typedef pair<Key, T>							value_type;
+				typedef pair<Key, T>*							pointer;
+				typedef pair<Key, T>&							reference;
 				typedef std::ptrdiff_t 				difference_type;
 				typedef bidirectional_iterator_tag	iterator_category;
 				
@@ -123,6 +129,11 @@ namespace ft
 				}
 
 				pair<Key, T>& operator*(void)
+				{
+					return (this->node_->data);
+				}
+
+				pair<Key, T>& operator*(void) const
 				{
 					return (this->node_->data);
 				}

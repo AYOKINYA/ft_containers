@@ -12,26 +12,27 @@ namespace ft
 	class Map
 	{
 		public:
+				
 				typedef	Key										key_type;
 				typedef	T										mapped_type;
 				typedef pair<const key_type, mapped_type>		value_type;
 				typedef Compare									key_compare;
-				//value_compare is down below as a class
+				class 	value_compare;
 				typedef Alloc									allocator_type;
 				typedef typename Alloc::reference				reference;
 				typedef typename Alloc::const_reference			const_reference;
 				typedef typename Alloc::pointer					pointer;
 				typedef typename Alloc::const_pointer			const_pointer;
 				typedef AVLtreeIterator<Key, T> 				iterator;
-				typedef AVLtreeIterator<const Key, const T>		const_iterator;
+				typedef AVLtreeIterator<Key, T>		const_iterator;
 				typedef AVLtreeRIterator<Key, T>				reverse_iterator;
-				typedef AVLtreeRIterator<const Key, const T>	const_reverse_iterator;
+				typedef AVLtreeRIterator<Key, T>	const_reverse_iterator;
 				typedef size_t									size_type;
 				typedef std::ptrdiff_t							difference_type;
 
 				class value_compare : public binary_function<value_type, value_type, bool>
 				{
-					friend class map;
+					friend class Map;
 
 					protected:
 						Compare comp;
@@ -125,12 +126,8 @@ namespace ft
 				{
 					if (!n)
 					{
-						n = new node();
-						n->parent = nullptr;
-						n->data = data;
-						n->right = nullptr;
-						n->left = nullptr;
-						n->height = 1;
+						n = new node(data, nullptr, nullptr, nullptr, 1);
+
 						if (!this->root_)
 							this->root_ = n;
 						//return (n);
@@ -277,7 +274,14 @@ namespace ft
 					this->cmp_ = map.cmp_;
 					this->root_ = map.root_;
 					this->len_ = map.len_;
-					// insert(map.begin(), map.end());
+					
+					// deep copy 구현 X. 그냥 insert로 쓰게!	
+					// const_iterator it = map.begin();
+					// while (it != map.end())
+					// {
+					// 	insert(begin().getPtr()->data);
+					// 	++it;
+					// }
 
 					return (*this);
 				}
@@ -461,7 +465,7 @@ namespace ft
 
 				value_compare value_comp() const
 				{
-					return (this->value_compare);
+					return (value_compare(key_comp()));
 				}
 				/*
 				** operations
@@ -514,7 +518,7 @@ namespace ft
 					while (start != last)
 					{
 						if (k_cmp((*start).first, k) <= 0)
-							return (iterator(this->root_, start));
+							return (iterator(this->root_, start.getPtr()));
 						++start;
 					}
 					return (this->end());
@@ -529,7 +533,7 @@ namespace ft
 					while (start != last)
 					{
 						if (k_cmp((*start).first, k) <= 0)
-							return (const_iterator(this->root_, start));
+							return (const_iterator(this->root_, start.getPtr()));
 						++start;
 					}
 					return (this->end());
@@ -544,9 +548,9 @@ namespace ft
 					while (start != last)
 					{
 						if ((*start).first == k)
-							return (iterator(this->root_, ++start));
+							return (iterator(this->root_, (++start).getPtr()));
 						if (k_cmp((*start).first, k) <= 0)
-							return (iterator(this->root_, start));
+							return (iterator(this->root_, start.getPtr()));
 						++start;
 					}
 					return (this->end());
@@ -561,9 +565,9 @@ namespace ft
 					while (start != last)
 					{
 						if ((*start).first == k)
-							return (const_iterator(this->root_, ++start));
+							return (const_iterator(this->root_, (++start).getPtr()));
 						if (k_cmp((*start).first, k) <= 0)
-							return (const_iterator(this->root_, start));
+							return (const_iterator(this->root_, start.getPtr()));
 						++start;
 					}
 					return (this->end());
