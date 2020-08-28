@@ -31,7 +31,7 @@ namespace ft
 				typedef Category			iterator_category;
 
 				IteratorList() {};
-				~IteratorList() {};
+				virtual ~IteratorList() {};
 				IteratorList(t_node<T> *List) : ptr(List) {};
 
 				IteratorList(const IteratorList &copy)
@@ -363,6 +363,7 @@ namespace ft
 					t_node<T> *cur_node;
 					t_node<T> *left_node;
 
+					
 					if (this->length == 0 && position != end())
 					{	
 						cur_node = nullptr;
@@ -376,6 +377,7 @@ namespace ft
 						else
 							left_node = position.getPtr()->prev;
 					}
+					
 					
 					for (InputIterator ite = first; ite != last; ++ite)
 					{
