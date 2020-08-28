@@ -10,6 +10,13 @@ namespace ft
 		private:
 				Container container_;
 				
+		public:
+				typedef	T			value_type;
+				typedef	Container	container_type;
+				typedef size_t		size_type;
+
+				explicit Stack(const container_type& ctnr = container_type()) : container_(ctnr) {};
+
 				Stack(const Stack& copy) : container_(copy) {};
 
 				Stack& operator=(const Stack& stack)
@@ -19,16 +26,7 @@ namespace ft
 					this->container_ = stack.container_;
 					return (*this);
 				}
-		public:
-				typedef	T			value_type;
-				typedef	Container	container_type;
-				typedef size_t		size_type;
-
-				explicit Stack(const container_type& ctnr = container_type())
-				{
-					this->container_ = ctnr;
-				};
-
+				
 				~Stack() {};
 
 				bool	empty() const

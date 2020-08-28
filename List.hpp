@@ -169,7 +169,6 @@ namespace ft
 
 				~List()
 				{
-					
 					if (this->length)
 						clear();
 					if (this->end_)
@@ -190,9 +189,10 @@ namespace ft
 					this->end_->next = nullptr;
 					this->end_->prev = List.end_->prev;
 					this->end_->data = 0;
-					
+
 					insert(begin(), List.begin(), List.end());
 					this->end_->prev = this->tail;
+
 					return (*this);
 				}
 
@@ -363,6 +363,8 @@ namespace ft
 					t_node<T> *cur_node;
 					t_node<T> *left_node;
 
+					if (first.getPtr() == nullptr)
+							return ;
 					
 					if (this->length == 0 && position != end())
 					{	
