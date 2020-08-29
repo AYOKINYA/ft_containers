@@ -24,8 +24,8 @@ namespace ft
 				typedef typename Alloc::const_pointer						const_pointer;
 				typedef AVLtreeIterator<const Key, T, key_compare> 			iterator;
 				typedef AVLtreeIterator<const Key, const T, key_compare>	const_iterator;
-				typedef AVLtreeRIterator<const Key, T, key_compare>			reverse_iterator;
-				typedef AVLtreeRIterator<const Key, const T, key_compare>	const_reverse_iterator;
+				typedef ReverseIterator<iterator>			reverse_iterator;
+				typedef ReverseIterator<const_iterator>	const_reverse_iterator;
 				typedef size_t												size_type;
 				typedef std::ptrdiff_t										difference_type;
 
