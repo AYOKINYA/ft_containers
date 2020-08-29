@@ -35,7 +35,9 @@ int main ()
 
 	std::cout << "====================\n";
 
-	ft::Map<char , int> second (first.begin(),first.end());
+	//ft::Map<char , int> second (first.begin(),first.end());
+	ft::Map<char , int> second (first);
+
 
 	std::cout << second['a'] << '\n';
 	std::cout << second['b'] << '\n';
@@ -81,6 +83,7 @@ int main ()
 	map2['d']=40;
 	map2['e']=50;
 	map2['f']=60;
+	
 	/*
 	**	   d
 	**    / \
