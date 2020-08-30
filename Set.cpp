@@ -126,6 +126,7 @@ int main(void)
 	myset.erase(itlow, itup);
 	iter_print(myset);
 
+	std::cout << "=========================================================\n";
 
 	return (0);
 }

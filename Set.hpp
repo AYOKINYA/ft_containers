@@ -327,33 +327,10 @@ namespace ft
 						}
 						else
 						{	// node with two children;
-							//n->data = tmp->data; 한 줄이면 될 것을.... const Key라서 이 고생을 했다.
-							node *tmp = minValueNode(n->right);
-							node *n_new = new node(n->data, nullptr, tmp->right, tmp->left, tmp->height);
-							if (n_new->right)
-								n_new->right->parent = n_new;
-							if (n_new->left)
-								n_new->left->parent = n_new;
-							
-							tmp->height = n->height;
-							tmp->left = n->left;
-							tmp->right = n_new;
-							if (tmp->left)
-								tmp->left->parent = tmp;
-							if (tmp->right)
-								tmp->right->parent = tmp;
-							n_new->parent = tmp;
-							tmp->parent = n->parent;
-							if (tmp->parent && tmp->parent->left && tmp->parent->left->data == tmp->data)
-								tmp->parent->left = tmp;
-							if (tmp->parent && tmp->parent->right && tmp->parent->right->data == tmp->data)
-								tmp->parent->right = tmp;
 
-							node *temp = n;
-							n = tmp;
-							delete (temp);
-							
-							n->right = delete_node(n->right, n_new->data);
+							node *tmp = minValueNode(n->right);
+							n->data = tmp->data;
+							n->right = delete_node(n->right, tmp->data);
 						}
 						
 						if (n == nullptr)
@@ -541,26 +518,13 @@ namespace ft
 				{
 					iterator next;
 
-					if (first == begin() && last == end())
+					while (first != last)
 					{
-						while (first != last)
-						{
-							next = first;
-							++next;
-							delete_node(root_, *first);
-							--this->len_;
-							first = next;
-						}
-					}
-					else
-					{
-						while (first != last)
-						{
-							next = first;
-							++next;
-							erase(find(*first));
-							first = next;
-						}
+						next = first;
+						++next;
+						delete_node(root_, *first);
+						--this->len_;
+						first = next;
 					}
 				}
 
