@@ -61,7 +61,11 @@ namespace ft
 				AVLtreeIterator<T, k_cmp>& operator++()
 				{
 					if (!node_)
-						return (*this);
+					{
+						node_ = tree_root_;
+						while (node_ && node_->left)
+							node_ = node_->left;
+					}
 					if (node_->right)
 					{
 						node_ = node_->right;
@@ -133,12 +137,17 @@ namespace ft
 					return (this->node_ != rhs.node_);
 				}
 
-				reference operator*(void)
+				T& operator*(void)
 				{
 					return (this->node_->data);
 				}
 
-				pointer operator->(void)
+				T& operator*(void) const
+				{
+					return (this->node_->data);
+				}
+
+				T* operator->(void)
 				{
 					return (&(this->node_->data));
 				}
@@ -251,7 +260,7 @@ namespace ft
 
 						if (!this->root_)
 							this->root_ = n;
-						//return (n);
+						return (n);
 					}
 					else if (k_cmp_(data, n->data))//(data < n->data)
 					{
@@ -288,66 +297,90 @@ namespace ft
 					node* cur = n;  
 				
 					/* loop down to find the leftmost leaf */
-					while (cur->left != NULL)  
+					while (cur && cur->left != NULL)  
 						cur = cur->left;  
 				
 					return cur;  
 				}  
 
-				node*	delete_node(node *n, const value_type &data)
+				node*	delete_node(node **n, const value_type &data)
 				{
 					if (n == nullptr)
-						return (n);
-					if (data < n->data)
-						n->left = delete_node(n->left, data);
-					else if (data > n->data)
-						n->right = delete_node(n->right, data);
+						return (nullptr);
+					if (*n == nullptr)	
+						return (*n);
+					if (data < (*n)->data)
+						(*n)->left = delete_node(&((*n)->left), data);
+					else if (data > (*n)->data)
+						(*n)->right = delete_node(&((*n)->right), data);
 					else
 					{
-						if (n->left == nullptr || n->right == nullptr)
+						if ((*n)->left == nullptr || (*n)->right == nullptr)
 						{
 							node *tmp = nullptr;
-							tmp = n->left ? n->left : n->right;
+							tmp = (*n)->left ? (*n)->left : (*n)->right;
 							
 							// no child case : n->left == nullptr && n->right == nullptr
 							if (tmp == NULL)
 							{
-								//std::cout << n->data  << std::endl;
-								tmp = n;
-								n = nullptr;
+								//std::cout << n->data.first  << std::endl;
+								tmp = (*n);
+								(*n) = nullptr;
 								delete (tmp);
 							}
 							else // one child case
 							{
-								node *temp = n;
-								n = tmp;
-								tmp->parent = temp->parent;
+								node *temp = (*n);
+								(*n) = tmp;
+								(*n)->parent = temp->parent;
 								delete (temp);
 							}
 						}
 						else
 						{	// node with two children;
+							//n->data = tmp->data; 한 줄이면 될 것을.... const Key라서 이 고생을 했다.
+							node *tmp = minValueNode((*n)->right);
+							// node *n_new = new node((*n)->data, nullptr, tmp->right, tmp->left, tmp->height);
+							// if (n_new->right)
+							// 	n_new->right->parent = n_new;
+							// if (n_new->left)
+							// 	n_new->left->parent = n_new;
+							
+							// tmp->height = (*n)->height;
+							// tmp->left = (*n)->left;
+							// tmp->right = n_new;
+							// if (tmp->left)
+							// 	tmp->left->parent = tmp;
+							// if (tmp->right)
+							// 	tmp->right->parent = tmp;
+							// n_new->parent = tmp;
+							// tmp->parent = (*n)->parent;
+							// if (tmp->parent && tmp->parent->left && tmp->parent->left->data == tmp->data)
+							// 	tmp->parent->left = tmp;
+							// if (tmp->parent && tmp->parent->right && tmp->parent->right->data == tmp->data)
+							// 	tmp->parent->right = tmp;
 
-							node *tmp = minValueNode(n->right);
-							n->data = tmp->data;
-							n->right = delete_node(n->right, tmp->data);
+							// node *temp = (*n);
+							// (*n) = tmp;
+							// delete (temp);
+							(*n)->data = tmp->data;
+							(*n)->right = delete_node(&((*n)->right), tmp->data);
 						}
-						
-						if (n == nullptr)
-							return n;
+						if ((*n) == nullptr)
+							return (*n);
 
-						setHeight(n);
-						int bf = balance_factor(n);
-						if (bf > 1 && balance_factor(n->left) >= 0)
-							return rotateLL(n);
-						if (bf < -1 && balance_factor(n->right) < 0)
-							return rotateRR(n);
-						if (bf > 1 && balance_factor(n->left) < 0)
-							return rotateLR(n);
-						if (bf < -1 && balance_factor(n->right) > 0)
-							return rotateRL(n);
+						setHeight((*n));
+						int bf = balance_factor((*n));
+						if (bf > 1 && balance_factor((*n)->left) >= 0)
+							return rotateLL((*n));
+						if (bf < -1 && balance_factor((*n)->right) < 0)
+							return rotateRR((*n));
+						if (bf > 1 && balance_factor((*n)->left) < 0)
+							return rotateLR((*n));
+						if (bf < -1 && balance_factor((*n)->right) > 0)
+							return rotateRL((*n));
 					}
-					return (n);
+					return (*n);
 				}
 
 		public:
@@ -489,7 +522,8 @@ namespace ft
     			void erase (iterator position)
 				{
 					node *n = position.getPtr();
-					delete_node(root_, n->data);
+					if (root_)
+						delete_node(&root_, n->data);
 					--this->len_;
 				}
 
@@ -502,7 +536,8 @@ namespace ft
 					{
 						if (k == n->data)
 						{
-							delete_node(root_, n->data);
+							if (root_)
+								delete_node(&root_, n->data);
 							--this->len_;
 							return (1);
 						}
@@ -522,7 +557,8 @@ namespace ft
 					{
 						next = first;
 						++next;
-						delete_node(root_, *first);
+						if (root_)
+							delete_node(&root_, *first);
 						--this->len_;
 						first = next;
 					}
