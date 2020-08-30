@@ -7,7 +7,7 @@
 
 namespace ft
 {
-	template <typename Key, typename T, class Compare = std::less<Key>, typename Alloc = std::allocator<pair<const Key,T>> >
+	template <typename Key, typename T, class Compare = std::less<Key>, typename Alloc = std::allocator<pair<const Key,T> > >
 	class Map
 	{
 		public:

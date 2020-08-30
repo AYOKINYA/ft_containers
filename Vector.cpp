@@ -52,7 +52,7 @@ int main (void)
 		myvector.push_back(i);
 	std::cout << "size: " << (int) myvector.size() << '\n';
 	std::cout << "capacity: " << (int) myvector.capacity() << '\n';
-	std::cout << "max_size: " << (int) myvector.max_size() << '\n';
+	std::cout << "max_size: " << myvector.max_size() << '\n';
 	
 	iter_print(myvector);
 	myvector.resize(5);

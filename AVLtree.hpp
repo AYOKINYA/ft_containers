@@ -63,7 +63,11 @@ namespace ft
 				AVLtreeIterator<Key, T, k_cmp>& operator++()
 				{
 					if (!node_)
-						return (*this);
+					{
+						node_ = tree_root_;
+						while (node_ && node_->left)
+							node_ = node_->left;
+					}
 					if (node_->right)
 					{
 						node_ = node_->right;
@@ -172,7 +176,7 @@ namespace ft
 				typedef	Key											key_type;
 				typedef	T											mapped_type;
 
-				typedef std::allocator<pair<const Key,T>>			allocator_type;
+				typedef std::allocator<pair<const Key,T> >			allocator_type;
 
 		private:
 

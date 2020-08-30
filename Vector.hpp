@@ -1,8 +1,9 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 # include "Iterator.hpp"
-# include <memory>
 # include <limits>
+# include <memory>
+
 
 namespace ft
 {
@@ -290,7 +291,7 @@ namespace ft
 
 				size_type	max_size() const
 				{
-					return (std::numeric_limits<size_type>::max() / sizeof(T));
+					return (std::numeric_limits<size_t>::max() / sizeof(T));
 				}
 				
 				void		resize (size_type n, value_type val = value_type())
