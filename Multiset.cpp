@@ -110,7 +110,7 @@ int main(void)
 
 	for (int i=1; i<=7; ++i)
 		x.insert(i * 10); 
-	//x.insert(30);
+	x.insert(30);
 
 	iter_print(x);
 	itlow = x.lower_bound(30);
@@ -121,7 +121,6 @@ int main(void)
 	// x.erase(30);
 	// x.erase(40);
 	// x.erase(50);
-
 
 	iter_print(x);
 

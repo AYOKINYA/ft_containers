@@ -589,7 +589,8 @@ namespace ft
 					while (first != last)
 					{
 						next = first;
-						++next;
+						if (next.getPtr() != nullptr)
+							++next;
 						if (root_)
 							delete_node(&root_, *first);
 						--this->len_;
