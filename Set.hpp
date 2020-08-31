@@ -493,7 +493,7 @@ namespace ft
 						return (ft::make_pair(iter, false));
 					
 					node *n = insert_node(root_, val);
-					n = iter.getPtr();
+					n = find(val).getPtr();
 					++this->len_;
 					return (ft::make_pair(iterator(this->root_, n), true));
 				}

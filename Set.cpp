@@ -119,7 +119,7 @@ int main(void)
 
 	ft::Set<int>::iterator itlow,itup;
 	iter_print(myset);
-	itlow = myset.lower_bound(20);
+	itlow = myset.lower_bound(30);
   	itup = myset.upper_bound(40);
 	std::cout << "hello " << *itlow << std::endl;
 	std::cout << "hello " << *itup << std::endl;
