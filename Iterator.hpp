@@ -147,7 +147,7 @@ namespace ft
 				typedef typename iterator_traits<Iterator>::pointer				pointer;
 				typedef typename iterator_traits<Iterator>::reference			reference;
 
-				ReverseIterator() : base_(nullptr) {};
+				ReverseIterator() : base_() {};
 				~ReverseIterator() {};
 				ReverseIterator(const ReverseIterator<Iterator> &copy)
 				{
